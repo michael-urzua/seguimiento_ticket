@@ -3,9 +3,23 @@
 
 <head>
   <meta charset="utf-8">
-    <title>Bitacora Banco Chile</title>
+    <title>SEGUIMIENTO TICKET</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style media="screen">
+  .results tr[visible='false'],
+  .no-result{
+   display:none;
+}
 
+.results tr[visible='true']{
+display:table-row;
+}
+
+.counter{
+padding:8px;
+color:#de1b1b;
+}
+  </style>
   {% extends "librerias.html" %}
 </head>
 
@@ -13,15 +27,221 @@
 
   {% block content %}
   <!-- .......-CABECERA-....... -->
-  <ul style="padding: 17px;">
+  <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
     <li><a class="navbar-brand">SEGUIMIENTO TICKET</a></li>
-
-
     <form action="/logout" method="POST">
        <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
+       <a style="float:right" class="navbar-brand">{{usuario}}</a>
+       <i class="fa fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+       <a style="float:right" class="navbar-brand">{{compania}}</a>
+       <i class="fa fa-institution" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
     </form><br>
   </ul>
+
   <!-- .......-CABECERA-....... -->
+
+{%with messages = get_flashed_messages()%}
+    {%if messages%}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="close">
+        <span aria-hidden="true">&times;</span>
+
+      </button>
+      {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+
+
+<div class="jumbotron jumbotron-fluid" style="padding-top: 14px ;padding-bottom: 5px;filter:alpha(opacity=50); opacity:0.9;">
+<div class="container">
+<form action="/consultar" method="POST">
+  <div class="form-row">
+    <div class="form-group col-md-2">
+
+    </div>
+
+    <div class="form-group col-md-3">
+      <label for="inputnombre">Selecciona Rango de Fecha: </label>
+      <div class="input-group date"  data-target-input="nearest">
+        <input type="text" name="fecha" value="{{ayer}}"/>
+      </div>
+      <script type="text/javascript">
+
+          $(function() {
+              $('input[name="fecha"]').daterangepicker({
+                opens: 'left',
+                maxDate: new Date(),
+                "locale": {
+                          "format": "DD/MM/YYYY",
+                          "separator": " - ",
+                          "applyLabel": "Aplicar",
+                          "cancelLabel": "Cancelar",
+                          "fromLabel": "De",
+                          "toLabel": "Até",
+                          "customRangeLabel": "Custom",
+                          "daysOfWeek": [
+                              "Dom",
+                              "Lun",
+                              "Mar",
+                              "Mie",
+                              "Jue",
+                              "Vie",
+                              "Sáb"
+                          ],
+                          "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Setiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                          ],
+                          "firstDay": 0
+                      }
+              }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+              });
+            });
+      </script>
+
+    </div>
+    <div class="form-group col-md-1"></div>
+    <div class="form-group col-md-3">
+      <br>
+      <button type="submit" class="btn btn-warning ">Consultar</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button type="button" class="btn btn-warning " data-toggle="modal" data-target="#myModal">Registrar</button>
+    </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="jumbotron jumbotron-fluid" style="padding-top: 14px ;padding-bottom: 5px; padding: 5px;filter:alpha(opacity=50); opacity:0.9;">
+
+<div class="form-group pull-right">
+   <input type="text" class="search form-control" placeholder="Buscar">
+</div>
+<span class="counter pull-right"></span>
+<br>
+
+<table id="example" class="table table-hover table-bordered results" style="width:100%">
+  <thead style="background-color:rgb(236, 101, 14)">
+    <tr>
+      <th scope="col"><p style="color:#f0f0f0;">Accion</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Estado</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Obj. Id</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Obj. Nombre</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Paso Orden</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Paso Nombre</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Causa Nombre</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Incid. Nombre</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Fecha Inicio</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Fecha Termino</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Observación</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">INC</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">PBI</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Categ. Nombre</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Activo</p></th>
+    </tr>
+
+  </thead>
+  {% for datos in data%}
+  <tbody>
+    <tr>
+
+      <td>
+        <a href="/actualizar/{{datos.14}}" class="btn btn-warning" data-toggle="modal" data-target="#myModal2{{datos.14}}">
+          <span class="fa fa-pencil-square-o fa-lg" data-toggle="tooltip" title="Modificar"></span>
+        </a>
+        <script>  $(document).ready(function(){$('[data-toggle="tooltip"]').tooltip();});</script>
+
+      </td>
+
+      {% if datos.0  == False %}
+      <th>Pendiente</th>
+      {%else%}
+      <th>Actualizado</th>
+      {%endif%}
+      <td>{{datos.1}}</td>
+      <td>{{datos.2}}</td>
+      <td>{{datos.3}}</td>
+        <td><span name="paso_nombre" style="text-overflow: ellipsis;" alt="{{datos.4}}" title="{{datos.4}}">{{datos.4 | truncate(20)}}</span></td>
+      <td>{{datos.5}}</td>
+      <td>{{datos.6}}</td>
+      <td>{{datos.7}}</td>
+      <td>{{datos.8}}</td>
+      <td><textarea name="textarea" rows="5" cols="20" disabled name="observacion">{{datos.9}}</textarea></td>
+      <td>{{datos.10}}</td>
+      <td>{{datos.11}}</td>
+      <td>{{datos.12}}</td>
+      {% if datos.13  == True %}
+      <th><span class="fa fa-check text-success fa-lg"></span></th>
+      {%else%}
+      <th><span class="fa fa-times  text-danger fa-lg"></span></th>
+      {%endif%}
+    </tr>
+  </tbody>
+  {% endfor %}
+  <script type="text/javascript">
+  $(document).ready(function() {
+      $('#example').DataTable({
+        "scrollY": 500,
+        "scrollX": true,
+        "paging":   false,
+        "ordering": false,
+        "info":     false,
+        "searching": false,
+        "language": {
+          "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+        }
+      });
+    });
+  </script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  $(".search").keyup(function () {
+    var searchTerm = $(".search").val();
+    var listItem = $('.results tbody').children('tr');
+    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+  $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+        return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+    }
+  });
+
+  $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','false');
+  });
+
+  $(".results tbody tr:containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','true');
+  });
+
+  var jobCount = $('.results tbody tr[visible="true"]').length;
+    $('.counter').text(jobCount + ' Registros');
+
+  if(jobCount == '0') {$('.no-result').show();}
+    else {$('.no-result').hide();}
+		  });
+});
+
+</script>
+
+</table>
+
+</div>
+
 
   {% endblock %}
 </body>
