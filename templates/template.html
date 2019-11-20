@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+    <title>Bitacora Banco Chile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {% extends "librerias.html" %}
+</head>
+
+<body>
+
+  {% block content %}
+  <!-- .......-CABECERA-....... -->
+  <ul style="padding: 17px;">
+    <li><a class="navbar-brand">SEGUIMIENTO TICKET</a></li>
+
+
+    <form action="/logout" method="POST">
+       <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
+    </form><br>
+  </ul>
+  <!-- .......-CABECERA-....... -->
+
+  {% endblock %}
+</body>
