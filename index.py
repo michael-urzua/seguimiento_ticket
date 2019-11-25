@@ -29,6 +29,7 @@ def logout():
 
 def session_token(var_session):
 	if var_session["option"]=='api':
+		print('aaaaaaaaaa',var_session['token'])
  		validar_session =requests.get(url_chek+url2+var_session['token'],allow_redirects=False,verify=False).content
 		return validar_session
 	else:
@@ -135,11 +136,6 @@ def consultar():
 		nombre = cliente_usuario[0][0]
 		cliente = cliente_usuario[0][1]
 		return render_template("template.html", data = data , ayer=fecha ,usuario = nombre , compania = cliente)
-
-
-
-
-
 
 
 if(__name__ == "__main__"):
