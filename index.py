@@ -29,7 +29,6 @@ def logout():
 
 def session_token(var_session):
 	if var_session["option"]=='api':
-		print('aaaaaaaaaa',var_session['token'])
  		validar_session =requests.get(url_chek+url2+var_session['token'],allow_redirects=False,verify=False).content
 		return validar_session
 	else:
@@ -75,9 +74,7 @@ def acceso():
 			session['cliente_usuario_id']=cliente_usuario_id
 			session['token'] = token
 			return redirect(url_for('inicio'))
-
 		else:
-
 			flash("Usuario y/o Clave son invalidos ")
 			return redirect(url_for('index'))
 
@@ -120,16 +117,20 @@ def consultar():
 	fecha  = request.form['fecha']
 	fecha_inicial_1=fecha.split(" ")[0]
 	fecha_inicial_2=fecha.split(" ")[2]
+	fecha_inicial_1= datetime.strptime(str(fecha_inicial_1), '%d/%m/%Y')
+	fecha_inicial_2= datetime.strptime(str(fecha_inicial_2), '%d/%m/%Y')
+
 
 	cursor=consulta_busqueda.select_consultar(fecha_inicial_1,fecha_inicial_2)
 	data = cursor.fetchall()
+
 
 	local = session['option']
 
 	if local == 'local':
 		usuario = session["usr_local"][0][0]
 		cliente = session["usr_local"][0][2]
-		return render_template("template.html", data = data , ayer=fecha,usuario = usuario , compania = cliente )
+		return render_template("template.html", data = data , ayer=fecha, usuario = usuario , compania = cliente )
 	else:
 		cursor3=consulta_user_compania.select_user_compania()
 		cliente_usuario = cursor3.fetchall()

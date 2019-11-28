@@ -29,18 +29,17 @@ class consulta_user_compania:
 class consulta_busqueda:
     @staticmethod
     def select_consultar(fecha_inicial_1,fecha_inicial_2):
+        print(fecha_inicial_1,fecha_inicial_2)
         try:
              cursor = conexion.conect_post()
              cursor.execute("""SELECT
-                                    re.estado, re.objetivo_id,re.objetivo_nombre, re.paso_orden,re.paso_nombre,cau.causa_nombre,inci.incidencia_nombre,
-                                    re.fecha_inicial::timestamp,re.fecha_final::timestamp, coalesce(re.observacion,''), coalesce(re.inc,''), coalesce(re.pbi,''),
-                                    cate.categoria_nombre,re.activo,re.id
-                                FROM
-                                    sbif.registro re inner join sbif.causa cau on re.causa_id = cau.causa_id
-                                    inner join sbif.incidencia inci on inci.incidencia_id = re.incidencia_id
-                                    inner join sbif.categoria cate on cate.categoria_id = re.categoria_id
+                                	estado,fecha_inicio_evento,fecha_solucion,monitor_hostname,
+                                	problema, problema_genera, solucion, culpable
+                                 FROM
+                                    sisticket.registro_sisticket
                                 where
-                                    re.fecha_inicial::date BETWEEN %s and %s""" , (fecha_inicial_1,fecha_inicial_2,))
+                                    fecha_inicio_evento::date BETWEEN %s and %s""" , (fecha_inicial_1,fecha_inicial_2,))
+             print("cuuursoooor",cursor)
              return cursor
         except:
              flash("No se puede realizar busqueda de registro")

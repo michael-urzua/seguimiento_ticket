@@ -32,9 +32,9 @@ color:#de1b1b;
     <form action="/logout" method="POST">
        <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
        <a style="float:right" class="navbar-brand">{{usuario}}</a>
-       <i class="fa fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+       <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
        <a style="float:right" class="navbar-brand">{{compania}}</a>
-       <i class="fa fa-institution" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+       <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
     </form><br>
   </ul>
 
@@ -128,7 +128,7 @@ color:#de1b1b;
 <div class="jumbotron jumbotron-fluid" style="padding-top: 14px ;padding-bottom: 5px; padding: 5px;filter:alpha(opacity=50); opacity:0.9;">
 
 <div class="form-group pull-right">
-   <input type="text" class="search form-control" placeholder="Buscar">
+   <input type="text" class="search form-control" style="width: 15%;" placeholder="Buscar">
 </div>
 <span class="counter pull-right"></span>
 <br>
@@ -138,19 +138,13 @@ color:#de1b1b;
     <tr>
       <th scope="col"><p style="color:#f0f0f0;">Accion</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Estado</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Obj. Id</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Obj. Nombre</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Paso Orden</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Paso Nombre</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Causa Nombre</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Incid. Nombre</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Fecha Inicio</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Fecha Termino</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Observación</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">INC</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">PBI</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Categ. Nombre</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Activo</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Fecha Inicio Evento</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Fecha Solucion</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Monitor Hostname</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Problema</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Problema Generado</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Solucion</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">culpable</p></th>
     </tr>
 
   </thead>
@@ -160,34 +154,20 @@ color:#de1b1b;
 
       <td>
         <a href="/actualizar/{{datos.14}}" class="btn btn-warning" data-toggle="modal" data-target="#myModal2{{datos.14}}">
-          <span class="fa fa-pencil-square-o fa-lg" data-toggle="tooltip" title="Modificar"></span>
+          <span class="fas fa-edit" data-toggle="tooltip" title="Modificar"></span>
         </a>
         <script>  $(document).ready(function(){$('[data-toggle="tooltip"]').tooltip();});</script>
 
       </td>
-
-      {% if datos.0  == False %}
-      <th>Pendiente</th>
-      {%else%}
-      <th>Actualizado</th>
-      {%endif%}
+      <td>{{datos.0}}</td>
       <td>{{datos.1}}</td>
       <td>{{datos.2}}</td>
       <td>{{datos.3}}</td>
-        <td><span name="paso_nombre" style="text-overflow: ellipsis;" alt="{{datos.4}}" title="{{datos.4}}">{{datos.4 | truncate(20)}}</span></td>
-      <td>{{datos.5}}</td>
-      <td>{{datos.6}}</td>
+      <td><span name="paso_nombre" style="text-overflow: ellipsis;" alt="{{datos.4}}" title="{{datos.4}}">{{datos.4 | truncate(20)}}</span></td>
+      <td><span name="paso_nombre" style="text-overflow: ellipsis;" alt="{{datos.5}}" title="{{datos.5}}">{{datos.5 | truncate(20)}}</span></td>
+      <td><span name="paso_nombre" style="text-overflow: ellipsis;" alt="{{datos.6}}" title="{{datos.6}}">{{datos.6 | truncate(20)}}</span></td>
       <td>{{datos.7}}</td>
-      <td>{{datos.8}}</td>
-      <td><textarea name="textarea" rows="5" cols="20" disabled name="observacion">{{datos.9}}</textarea></td>
-      <td>{{datos.10}}</td>
-      <td>{{datos.11}}</td>
-      <td>{{datos.12}}</td>
-      {% if datos.13  == True %}
-      <th><span class="fa fa-check text-success fa-lg"></span></th>
-      {%else%}
-      <th><span class="fa fa-times  text-danger fa-lg"></span></th>
-      {%endif%}
+
     </tr>
   </tbody>
   {% endfor %}
