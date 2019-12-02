@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, session,redirect, url_for,sen
 from datetime import datetime, date, time, timedelta
 import requests
 from config import conexion_sqlite
-from data import consulta_busqueda,consulta_user_compania
+from data import consulta_busqueda,consulta_user_compania,actualiza_registro,consulta_inicial,consulta_host
 from utils.get_token import get
 from utils.globals import url2,url_chek
 import sys
@@ -88,6 +88,15 @@ def inicio():
 	if variable == 'False':
 		return render_template("login.html")
 
+	cursor=consulta_inicial.select_inicio()
+	if cursor == False:
+
+		flash("No hay conexion a la BD")
+		return redirect(url_for('index'))
+
+	cursor_host=consulta_host.select_consultar_host()
+	host_name = cursor_host.fetchall()
+
 	local = session['option']
 	if local == 'local':
 		cursor= conexion_sqlite.conect_sql()
@@ -95,14 +104,15 @@ def inicio():
 		session["usr_local"]=(respuesta)
 		usuario = session["usr_local"][0][0]
 		cliente = session["usr_local"][0][2]
-		return render_template("template.html" ,usuario = usuario , compania = cliente )
+
+		return render_template("template.html" ,data = cursor, usuario = usuario , compania = cliente,host_name = host_name  )
 	else:
 		cursor1=consulta_user_compania.select_user_compania()
 		cliente_usuario = cursor1.fetchall()
-		usuario = cliente_usuario[0][0]
-		cliente = cliente_usuario[0][1]
-
-		return render_template("template.html" , usuario = usuario , compania = cliente)
+		session["usr_api"]=(cliente_usuario)
+		usuario = session["usr_api"][0][0]
+		cliente = session["usr_api"][0][1]
+		return render_template("template.html" ,data = cursor,usuario = usuario , compania = cliente,host_name = host_name )
 
 
 @app.route("/consultar" ,methods=["GET","POST"])
@@ -120,23 +130,46 @@ def consultar():
 	fecha_inicial_1= datetime.strptime(str(fecha_inicial_1), '%d/%m/%Y')
 	fecha_inicial_2= datetime.strptime(str(fecha_inicial_2), '%d/%m/%Y')
 
-
 	cursor=consulta_busqueda.select_consultar(fecha_inicial_1,fecha_inicial_2)
 	data = cursor.fetchall()
 
+	cursor_host=consulta_host.select_consultar_host()
+	host_name = cursor_host.fetchall()
 
 	local = session['option']
 
 	if local == 'local':
 		usuario = session["usr_local"][0][0]
 		cliente = session["usr_local"][0][2]
-		return render_template("template.html", data = data , ayer=fecha, usuario = usuario , compania = cliente )
+		return render_template("template.html", data = data , ayer=fecha, usuario = usuario , compania = cliente ,host_name = host_name  )
 	else:
 		cursor3=consulta_user_compania.select_user_compania()
 		cliente_usuario = cursor3.fetchall()
 		nombre = cliente_usuario[0][0]
 		cliente = cliente_usuario[0][1]
-		return render_template("template.html", data = data , ayer=fecha ,usuario = nombre , compania = cliente)
+		return render_template("template.html", data = data , ayer=fecha ,usuario = nombre , compania = cliente,host_name = host_name  )
+
+
+@app.route("/actualizar",methods=['POST'])
+def actualizar():
+
+	variable = session_token(session)
+
+	if variable == 'False':
+		return render_template("login.html")
+
+
+	id		= request.form['id']
+	estado	= request.form['estado']
+
+	cursor=actualiza_registro.update_registro(id,estado)
+	
+
+	#return render_template("template.html" ,persona = cursor ,ayer = yesterday)
+	return redirect(url_for('inicio'))
+
+
+
 
 
 if(__name__ == "__main__"):
