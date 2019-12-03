@@ -95,53 +95,45 @@ class actualiza_registro:
             #return('no se actualizo')
             flash("No se puede actualizar")
 
-# class insertar_registro:
-#     @staticmethod
-#     def insert(estado,objetivo_id,paso_orden,paso_nombre,incidencia_id,
-# 									fecha_inicial,fecha_final,causa_id,categoria_id,observacion,inc,
-# 									pbi,cliente_id,usuario_nombre_insert,activo):
-#
-#             # ID
-#             cursor = conexion.conect_post()
-#
-#             cursor.execute("SELECT MAX( id ) + 1 FROM sbif.registro")
-#             id_datos = cursor.fetchone()
-#
-#
-#             #FECHA ACTUAL
-#             fecha_creacion = datetime.now()
-#
-#             local = session['option']
-#             if local == 'local':
-#                 usuario = session["usr_local"][0][0]
-#                 connection = psycopg2.connect(database = "central2010", user = "reporte_web", password = ".112233.", host = "10.20.12.100", port = "5432")
-#                 cursor=connection.cursor()
-#                 cursor.execute("""INSERT INTO sbif.registro(
-#                         						id, estado, objetivo_id, objetivo_nombre,paso_orden,paso_nombre,incidencia_id, fecha_inicial, fecha_final,
-#                          						fecha_creacion,causa_id, categoria_id,observacion, inc, pbi,cliente_id,usuario_nombre_insert,activo,usuario_local_insert)
-#                                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-#             								   (id_datos, estado, objetivo_id, objetivo_nombre,paso_orden,paso_nombre,incidencia_id, fecha_inicial, fecha_final,
-#                                                fecha_creacion,causa_id, categoria_id,observacion,inc, pbi,cliente_id,usuario_nombre_insert,activo,usuario))
-#                 connection.commit()
-#                 flash("Datos Ingresados Correctamente")
-#                 return cursor
-#
-#             else:
-#                 # USUARIO SESSION
-#                 usuario_insert = session['cliente_usuario_id']
-#
-#                 connection = psycopg2.connect(database = "central2010", user = "reporte_web", password = ".112233.", host = "10.20.12.100", port = "5432")
-#                 cursor=connection.cursor()
-#                 cursor.execute("""INSERT INTO sbif.registro(
-#                         						id, estado, objetivo_id, objetivo_nombre,paso_orden,paso_nombre,incidencia_id, fecha_inicial, fecha_final,
-#                          						fecha_creacion,causa_id, categoria_id,observacion, inc, pbi,cliente_id,usuario_nombre_insert,activo,usuario_id_insert)
-#                                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-#             								   (id_datos, estado, objetivo_id, objetivo_nombre,paso_orden,paso_nombre,incidencia_id, fecha_inicial, fecha_final,
-#                                                fecha_creacion,causa_id, categoria_id,observacion,inc, pbi,cliente_id,usuario_nombre_insert,activo,usuario_insert))
-#
-#                 connection.commit()
-#                 flash("Datos Ingresados Correctamente")
-#                 return cursor
+class insertar_registro:
+    @staticmethod
+    def insert(estado,fecha_inicio_evento, monitor_hostname, problema):
+
+            # ID
+            cursor = conexion.conect_post()
+
+            cursor.execute("SELECT MAX( id ) + 1 FROM sisticket.registro_sisticket")
+            id_datos = cursor.fetchone()
+
+            #FECHA ACTUAL
+            fecha_creacion = datetime.now()
+
+            local = session['option']
+            if local == 'local':
+                usuario = session["usr_local"][0][0]
+                connection = psycopg2.connect(database = "central2010", user = "postgres", password = "", host = "172.16.5.117", port = "5432")
+                cursor=connection.cursor()
+                cursor.execute("""INSERT INTO sisticket.registro_sisticket
+                                            (id, estado, usuario_nombre_insert ,fecha_inicio_evento, monitor_hostname, problema,fecha_carga)
+                                                VALUES (%s,%s,%s,%s,%s,%s,%s)""",
+            								   (id_datos, estado, usuario, fecha_inicio_evento,monitor_hostname,problema,fecha_creacion))
+                connection.commit()
+                flash("Datos Ingresados Correctamente")
+                return cursor
+
+            else:
+                usuario = session["usr_api"][0][0]
+                usuario_id = session['cliente_usuario_id']
+                connection = psycopg2.connect(database = "central2010", user = "postgres", password = "", host = "172.16.5.117", port = "5432")
+                cursor=connection.cursor()
+                cursor.execute("""INSERT INTO sisticket.registro_sisticket
+                                                (id, estado,usuario_nombre_insert,usuario_id_insert,fecha_inicio_evento,monitor_hostname,problema,fecha_carga)
+                                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
+            								    (id_datos, estado, usuario, usuario_id,fecha_inicio_evento,monitor_hostname,problema,fecha_creacion))
+
+                connection.commit()
+                flash("Datos Ingresados Correctamente")
+                return cursor
 
 class consulta_host:
     @staticmethod

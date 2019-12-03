@@ -129,6 +129,7 @@ color:#de1b1b;
 
   <!-- INICIO INSERTAR REGISTROS  -->
 
+  <form action="/insertar" method="POST">
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
@@ -137,15 +138,10 @@ color:#de1b1b;
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-
         </div>
+
         <div class="modal-body">
-
           <!-- INICIO FORMULARIO ACTUALIZA -->
-           <form action="" method="POST" >
-
-
              <div class="form-group row" >
                        <label for="inputfecha_inicio3" class="col-sm-3 col-form-label">Fecha Inicio Evento</label>
                        <div class="col-sm-9">
@@ -171,10 +167,10 @@ color:#de1b1b;
 
 
                   <div class="form-group row">
-                    <label for="inputpaso3" class="col-sm-3 col-form-label">Monitos HostName</label>
+                    <label for="inputpaso3" class="col-sm-3 col-form-label">Monitor HostName</label>
                     <div class="col-sm-9">
-                      <input type="text" class="form-control" id="default" list="languages" required
-                                oninvalid="setCustomValidity('El campo Paso Nombre es obligatorio')"
+                      <input type="text" class="form-control" name="monitor_hostname" id="monitor_hostname" list="languages" required
+                                oninvalid="setCustomValidity('El campo Monitor HostName es obligatorio')"
                                 oninput="setCustomValidity('')"/>
                     </div>
                   </div>
@@ -193,27 +189,21 @@ color:#de1b1b;
                       </div>
                     </div>
 
-
-
-             <div class="form-group row">
-               <div class="col-sm-5"></div>
-               <div class="col-sm-2">
-                 <button type="submit" class="btn btn-success">Guardar</button>
-               </div>
-               <div class="col-sm-5"></div>
-             </div>
+                   <div class="form-group row">
+                     <div class="col-sm-5"></div>
+                     <div class="col-sm-2">
+                       <button type="submit" class="btn btn-success">Guardar</button>
+                     </div>
+                     <div class="col-sm-5"></div>
+                   </div>
            </form>
             <!-- TERMINO FORMULARIO ACTUALIZA -->
         </div>
-        <div class="modal-footer">
-        </div>
+        <div class="modal-footer">  </div>
       </div>
     </div>
   </div>
   <!-- ENDModal -->
-
-
-
 
   <!-- FIN INSERTAR REGISTROS  -->
 
@@ -221,7 +211,6 @@ color:#de1b1b;
 
 
 <div class="jumbotron jumbotron-fluid" style="padding-top: 14px ;padding-bottom: 5px; padding: 5px;">
-
 <div class="form-group pull-right" style="width:15%">
    <input type="text" class="search form-control" placeholder="Buscar">
 </div>
