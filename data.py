@@ -29,17 +29,17 @@ class consulta_user_compania:
     @staticmethod
     def select_user_compania():
         try:
-            # usuario = session['cliente_usuario_id']
+            usuario = session['cliente_usuario_id']
             cursor = conexion.conect_post()
 
-            # cursor.execute("""SELECT cu.nombre , c.nombre
-            #                     FROM public.cliente_usuario cu inner join public.cliente c
-            #                     ON cu.cliente_id = c.cliente_id
-            #                     WHERE cu.cliente_usuario_id = %s""" , (usuario,))
             cursor.execute("""SELECT cu.nombre , c.nombre
                                 FROM public.cliente_usuario cu inner join public.cliente c
                                 ON cu.cliente_id = c.cliente_id
-                                WHERE cu.cliente_usuario_id = 9142""")
+                                WHERE cu.cliente_usuario_id = %s""" , (usuario,))
+            # cursor.execute("""SELECT cu.nombre , c.nombre
+            #                     FROM public.cliente_usuario cu inner join public.cliente c
+            #                     ON cu.cliente_id = c.cliente_id
+            #                     WHERE cu.cliente_usuario_id = 9142""")
             return cursor
         except:
          return False
