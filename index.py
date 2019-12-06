@@ -133,6 +133,8 @@ def consultar():
 	cursor=consulta_busqueda.select_consultar(fecha_inicial_1,fecha_inicial_2)
 	data = cursor.fetchall()
 
+	print("dataaaaaaa",data)
+
 	cursor_host=consulta_host.select_consultar_host()
 	host_name = cursor_host.fetchall()
 
@@ -175,15 +177,16 @@ def insertar():
 	if variable == 'False':
 		return render_template("login.html")
 
-	estado 			= 't'
-	fecha_inicio_evento		= request.form['fecha_inicio_evento']
-
-	monitor_hostname		= request.form['monitor_hostname']
-	problema		= request.form['problema']
-
-	# print("fecha_inicialllllll",fecha_inicial)
-
-	cursor=insertar_registro.insert(estado,fecha_inicio_evento, monitor_hostname, problema)
+	# estado 			= 't'
+	# fecha_inicio_evento		= request.form['fecha_inicio_evento']
+	#
+	monitor_hostname	= request.form.getlist('monitor_hostname')
+	print("monitor_hostnameeeee",monitor_hostname)
+	# problema		= request.form['problema']
+	#
+	# # print("fecha_inicialllllll",fecha_inicial)
+	#
+	# cursor=insertar_registro.insert(estado,fecha_inicio_evento, monitor_hostname, problema)
 
 	return redirect(url_for('inicio'))
 

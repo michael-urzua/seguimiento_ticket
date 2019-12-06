@@ -36,10 +36,6 @@ class consulta_user_compania:
                                 FROM public.cliente_usuario cu inner join public.cliente c
                                 ON cu.cliente_id = c.cliente_id
                                 WHERE cu.cliente_usuario_id = %s""" , (usuario,))
-            # cursor.execute("""SELECT cu.nombre , c.nombre
-            #                     FROM public.cliente_usuario cu inner join public.cliente c
-            #                     ON cu.cliente_id = c.cliente_id
-            #                     WHERE cu.cliente_usuario_id = 9142""")
             return cursor
         except:
          return False
@@ -92,7 +88,6 @@ class actualiza_registro:
                 flash("Datos Actualizados Correctamente")
 
         except:
-            #return('no se actualizo')
             flash("No se puede actualizar")
 
 class insertar_registro:
@@ -140,8 +135,9 @@ class consulta_host:
     def select_consultar_host():
         try:
              cursor = conexion.conect_post()
-             cursor.execute("""SELECT CONCAT( monitor_id ,' - ', hostname)
-                                FROM sisticket.db_monitor  ORDER BY monitor_id;""" )
+             cursor.execute("""SELECT monitor_id, CONCAT( monitor_id ,' - ', hostname)
+                                FROM sisticket.db_monitor
+                                WHERE hostname is not null ORDER BY monitor_id;""" )
              return cursor
         except:
              flash("No se puede realizar busqueda de registro")
