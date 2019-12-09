@@ -92,7 +92,7 @@ class actualiza_registro:
 
 class insertar_registro:
     @staticmethod
-    def insert(estado,fecha_inicio_evento, monitor_hostname, problema):
+    def insert(estado, fecha_inicio_evento, problema, monitor):
 
             # ID
             cursor = conexion.conect_post()
@@ -111,7 +111,7 @@ class insertar_registro:
                 cursor.execute("""INSERT INTO sisticket.registro_sisticket
                                             (id, estado, usuario_nombre_insert ,fecha_inicio_evento, monitor_hostname, problema,fecha_carga)
                                                 VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-            								   (id_datos, estado, usuario, fecha_inicio_evento,monitor_hostname,problema,fecha_creacion))
+            								   (id_datos, estado, usuario, fecha_inicio_evento,monitor,problema,fecha_creacion))
                 connection.commit()
                 flash("Datos Ingresados Correctamente")
                 return cursor
@@ -124,7 +124,7 @@ class insertar_registro:
                 cursor.execute("""INSERT INTO sisticket.registro_sisticket
                                                 (id, estado,usuario_nombre_insert,usuario_id_insert,fecha_inicio_evento,monitor_hostname,problema,fecha_carga)
                                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
-            								    (id_datos, estado, usuario, usuario_id,fecha_inicio_evento,monitor_hostname,problema,fecha_creacion))
+            								    (id_datos, estado, usuario, usuario_id,fecha_inicio_evento,monitor,problema,fecha_creacion))
 
                 connection.commit()
                 flash("Datos Ingresados Correctamente")

@@ -133,8 +133,6 @@ def consultar():
 	cursor=consulta_busqueda.select_consultar(fecha_inicial_1,fecha_inicial_2)
 	data = cursor.fetchall()
 
-	print("dataaaaaaa",data)
-
 	cursor_host=consulta_host.select_consultar_host()
 	host_name = cursor_host.fetchall()
 
@@ -166,8 +164,6 @@ def actualizar():
 
 	cursor=actualiza_registro.update_registro(id,estado)
 
-
-	#return render_template("template.html" ,persona = cursor ,ayer = yesterday)
 	return redirect(url_for('inicio'))
 
 @app.route("/insertar",methods=['POST'])
@@ -177,16 +173,19 @@ def insertar():
 	if variable == 'False':
 		return render_template("login.html")
 
-	# estado 			= 't'
-	# fecha_inicio_evento		= request.form['fecha_inicio_evento']
-	#
+	estado 			= 't'
+	fecha_inicio_evento		= request.form['fecha_inicio_evento']
 	monitor_hostname	= request.form.getlist('monitor_hostname')
-	print("monitor_hostnameeeee",monitor_hostname)
-	# problema		= request.form['problema']
-	#
-	# # print("fecha_inicialllllll",fecha_inicial)
-	#
-	# cursor=insertar_registro.insert(estado,fecha_inicio_evento, monitor_hostname, problema)
+	problema		= request.form['problema']
+
+	monitor_hostname_final = ""
+	for elem in monitor_hostname:
+
+		monitor_hostname_final2=(str(elem).split("-")[0])
+		monitor_hostname_final=monitor_hostname_final+","+monitor_hostname_final2
+		monitor = monitor_hostname_final[1:100]
+
+	cursor=insertar_registro.insert(estado, fecha_inicio_evento, problema, monitor)
 
 	return redirect(url_for('inicio'))
 

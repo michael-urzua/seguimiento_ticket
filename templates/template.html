@@ -169,6 +169,7 @@ color:#de1b1b;
                           <label for="inputpaso3" class="col-sm-3 col-form-label">Monitor HostName</label>
                             <div class="col-sm-9">
                             <select class="selectpicker form-control" data-live-search="true" name="origen" id="origen" >
+                              <option value="0">Seleccione Hostname</option>
                               {% for h_name in host_name %}
                               <option data-tokens="{{h_name.0}}">{{h_name.1}}</option>
                               {%endfor%}
@@ -189,7 +190,7 @@ color:#de1b1b;
                         <div class="form-group row">
                           <label for="inputpaso3" class="col-sm-3 col-form-label"></label>
                             <div class="col-sm-9">
-                            <select name="monitor_hostname" id="monitor_hostname" multiple="multiple" size="8" class="form-control">
+                            <select name="monitor_hostname" id="monitor_hostname" multiple="multiple" size="8" class="form-control" required disabled/>
                             </select>
                           </div>
                         </div>
@@ -419,18 +420,14 @@ $(document).ready(function() {
         return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
     }
   });
-
   $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
     $(this).attr('visible','false');
   });
-
   $(".results tbody tr:containsi('" + searchSplit + "')").each(function(e){
     $(this).attr('visible','true');
   });
-
   var jobCount = $('.results tbody tr[visible="true"]').length;
     $('.counter').text(jobCount + ' Registros');
-
   if(jobCount == '0') {$('.no-result').show();}
     else {$('.no-result').hide();}
 		  });
