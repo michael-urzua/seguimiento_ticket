@@ -125,6 +125,7 @@ def consultar():
 		return render_template("login.html")
 
 	fecha  = request.form['fecha']
+
 	fecha_inicial_1=fecha.split(" ")[0]
 	fecha_inicial_2=fecha.split(" ")[2]
 	fecha_inicial_1= datetime.strptime(str(fecha_inicial_1), '%d/%m/%Y')
@@ -132,6 +133,13 @@ def consultar():
 
 	cursor=consulta_busqueda.select_consultar(fecha_inicial_1,fecha_inicial_2)
 	data = cursor.fetchall()
+	for f in data:
+		print("todo",f[3])
+
+
+
+	# cursor_cliente=consulta_busqueda_cliente.select_consultar_cliente(f,)
+
 
 	cursor_host=consulta_host.select_consultar_host()
 	host_name = cursor_host.fetchall()
@@ -164,6 +172,8 @@ def actualizar():
 
 	cursor=actualiza_registro.update_registro(id,estado)
 
+
+	#return render_template("template.html" ,persona = cursor ,ayer = yesterday)
 	return redirect(url_for('inicio'))
 
 @app.route("/insertar",methods=['POST'])
@@ -173,19 +183,20 @@ def insertar():
 	if variable == 'False':
 		return render_template("login.html")
 
-	estado 			= 't'
-	fecha_inicio_evento		= request.form['fecha_inicio_evento']
+	estado 				= 't'
+	fecha_inicio_evento	= request.form['fecha_inicio_evento']
 	monitor_hostname	= request.form.getlist('monitor_hostname')
-	problema		= request.form['problema']
 
 	monitor_hostname_final = ""
 	for elem in monitor_hostname:
 
 		monitor_hostname_final2=(str(elem).split("-")[0])
 		monitor_hostname_final=monitor_hostname_final+","+monitor_hostname_final2
-		monitor = monitor_hostname_final[1:100]
+		monitor="{"+monitor_hostname_final[1:210]+"}"
 
-	cursor=insertar_registro.insert(estado, fecha_inicio_evento, problema, monitor)
+	problema	= request.form['problema']
+	culpable	= request.form['culpable']
+	cursor=insertar_registro.insert(estado,fecha_inicio_evento, monitor, problema,culpable)
 
 	return redirect(url_for('inicio'))
 

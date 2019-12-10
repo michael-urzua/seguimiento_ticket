@@ -7,15 +7,14 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-
 class consulta_inicial:
     @staticmethod
     def select_inicio():
         try:
             cursor = conexion.conect_post()
             cursor.execute("""SELECT
-                                estado,fecha_inicio_evento,fecha_solucion,monitor_hostname,
-                                problema, problema_genera, solucion, culpable,id
+                                estado,fecha_inicio_evento,fecha_solucion,inframonitor,
+                                coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
                                  FROM
                                     sisticket.registro_sisticket
                                 where
@@ -46,8 +45,8 @@ class consulta_busqueda:
         try:
              cursor = conexion.conect_post()
              cursor.execute("""SELECT
-                                	estado,fecha_inicio_evento,fecha_solucion,monitor_hostname,
-                                	problema, problema_genera, solucion, culpable,id
+                                	estado,fecha_inicio_evento,fecha_solucion,inframonitor,
+                                	coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
                                  FROM
                                     sisticket.registro_sisticket
                                 where
@@ -92,9 +91,8 @@ class actualiza_registro:
 
 class insertar_registro:
     @staticmethod
-    def insert(estado, fecha_inicio_evento, problema, monitor):
+    def insert(estado,fecha_inicio_evento, monitor, problema,culpable):
 
-            # ID
             cursor = conexion.conect_post()
 
             cursor.execute("SELECT MAX( id ) + 1 FROM sisticket.registro_sisticket")
@@ -109,9 +107,9 @@ class insertar_registro:
                 connection = psycopg2.connect(database = "central2010", user = "postgres", password = "", host = "172.16.5.117", port = "5432")
                 cursor=connection.cursor()
                 cursor.execute("""INSERT INTO sisticket.registro_sisticket
-                                            (id, estado, usuario_nombre_insert ,fecha_inicio_evento, monitor_hostname, problema,fecha_carga)
-                                                VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-            								   (id_datos, estado, usuario, fecha_inicio_evento,monitor,problema,fecha_creacion))
+                                            (id, estado, usuario_nombre_insert ,fecha_inicio_evento, inframonitor, problema,fecha_carga,culpable)
+                                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
+            								   (id_datos, estado, usuario, fecha_inicio_evento,monitor,problema,fecha_creacion,culpable))
                 connection.commit()
                 flash("Datos Ingresados Correctamente")
                 return cursor
@@ -122,9 +120,9 @@ class insertar_registro:
                 connection = psycopg2.connect(database = "central2010", user = "postgres", password = "", host = "172.16.5.117", port = "5432")
                 cursor=connection.cursor()
                 cursor.execute("""INSERT INTO sisticket.registro_sisticket
-                                                (id, estado,usuario_nombre_insert,usuario_id_insert,fecha_inicio_evento,monitor_hostname,problema,fecha_carga)
-                                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
-            								    (id_datos, estado, usuario, usuario_id,fecha_inicio_evento,monitor,problema,fecha_creacion))
+                                                (id, estado,usuario_nombre_insert,usuario_id_insert,fecha_inicio_evento,inframonitor,problema,fecha_carga,culpable)
+                                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+            								    (id_datos, estado, usuario, usuario_id,fecha_inicio_evento,monitor,problema,fecha_creacion,culpable))
 
                 connection.commit()
                 flash("Datos Ingresados Correctamente")
