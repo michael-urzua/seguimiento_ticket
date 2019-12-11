@@ -139,3 +139,40 @@ class consulta_host:
              return cursor
         except:
              flash("No se puede realizar busqueda de registro")
+
+class clientMonitor:
+    @staticmethod
+    def selectClientMonitor(monitors):
+        newMon='('
+        for monitor in monitors:
+            newMon+=str(monitor)+','
+        newMon= newMon[:-1]
+        newMon+=')'
+        _select=str("SELECT distinct(c.cliente_id) as cliente_id, c.nombre, false AS infra_todocliente")
+        _select+=" FROM public.cliente c, public.cliente_mapa_cliente_objetivo co"\
+                " WHERE c.cliente_id = co.cliente_id"\
+                " AND co.objetivo_id IN(SELECT Distinct(objetivo_id) FROM public.objetivo_config"\
+                " WHERE es_ultima_config = 't' AND monitor_id <> '{}' AND ARRAY"+str(monitors)
+        _select+=" && monitor_id) UNION SELECT distinct(c.cliente_id) as cliente_id, c.nombre, ie.infra_todocliente"\
+                " FROM public.cliente c, sisticket.infracliente i, sisticket.infraestructura ie"\
+                " WHERE c.cliente_id = i.cliente_id AND i.infra_id = ie.infra_id AND i.infra_id IN"+str(newMon)
+        try:
+             cursor = conexion.conect_post()
+             cursor.execute(_select)
+             cursor = cursor.fetchall()
+             return cursor
+        except:
+             flash("No se puede realizar busqueda de registro")
+        return ''
+
+    @staticmethod
+    def dataMonitor(id_monitor):
+        _select=str("SELECT nombre from public.monitor where monitor_id=")+str(id_monitor)
+        try:
+             cursor = conexion.conect_post()
+             cursor.execute(_select)
+             cursor = cursor.fetchall()
+             return cursor
+        except:
+             flash("No se puede realizar busqueda de registro")
+        return ''

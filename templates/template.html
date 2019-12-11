@@ -257,6 +257,7 @@ color:#de1b1b;
       <th scope="col"><p style="color:#f0f0f0;">Fecha Inicio Evento</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Fecha Solucion</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Monitor Hostname</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Clientes Afectado</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Problema</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Problema Generado</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Solucion</p></th>
@@ -268,13 +269,13 @@ color:#de1b1b;
   <tbody>
     <tr>
       <td>
-      <a href="/actualizar/{{datos.8}}" class="btn btn-warning" data-toggle="modal" data-target="#myModal2{{datos.8}}">
+        <a href="/actualizar/{{datos["culpable"]}}" class="btn btn-warning" data-toggle="modal" data-target="#myModal2{{datos["culpable"]}}">
             <span class="far fa-edit x" data-toggle="tooltip" title="Modificar"></span>
-          </a>
-          <script>  $(document).ready(function(){$('[data-toggle="tooltip"]').tooltip();});</script>
+        </a>
+        <script>  $(document).ready(function(){$('[data-toggle="tooltip"]').tooltip();});</script>
 
           <!-- Modal -->
-          <div class="modal fade" id="myModal2{{datos.8}}" role="dialog">
+          <div class="modal fade" id="myModal2{{datos["culpable"]}}" role="dialog">
             <div class="modal-dialog">
 
               <!-- Modal content-->
@@ -293,15 +294,15 @@ color:#de1b1b;
                      <div class="form-group row">
                        <label for="inputobjetivo3" class="col-sm-3 col-form-label">Fecha Inicio Evento</label>
                        <div class="col-sm-9">
-                         <input type="hidden" class="form-control" name="id"  value="{{datos.8}}">
-                         <input type="text" class="form-control" name="fecha_inicio_evento"  disabled value="{{datos.1}}" >
+                         <input type="hidden" class="form-control" name="id"  value="{{datos["culpable"]}}">
+                         <input type="text" class="form-control" name="fecha_inicio_evento"  disabled value="{{datos["status"]}}" >
                        </div>
                      </div>
 
                      <div class="form-group row">
                        <label for="inputobjetivo3" class="col-sm-3 col-form-label">Fecha Solución</label>
                        <div class="col-sm-9">
-                         <input type="text" class="form-control" name="fecha_solucion"  disabled value="{{datos.2}}" >
+                         <input type="text" class="form-control" name="fecha_solucion"  disabled value="{{datos.beginDate}}" >
                        </div>
                      </div>
 
@@ -309,6 +310,13 @@ color:#de1b1b;
                        <label for="inputobjetivo3" class="col-sm-3 col-form-label">Monitor Hostname</label>
                        <div class="col-sm-9">
                          <input type="text" class="form-control" name="monitor_hostname"  disabled value="{{datos.3}}" >
+                       </div>
+                     </div>
+
+                     <div class="form-group row">
+                       <label for="inputobjetivo3" class="col-sm-3 col-form-label">Clientes</label>
+                       <div class="col-sm-9">
+                         <input type="text" class="form-control" name="Clientes"  disabled value="{{client}}" >
                        </div>
                      </div>
 
@@ -385,18 +393,19 @@ color:#de1b1b;
 
 
 
-      {% if datos.0 == True %}
+      {% if datos["status"] == True %}
       <th><span class="far fa-check-circle text-success fa-2x"></span></th>
       {%else%}
       <th><span class="far fa-times-circle  text-danger fa-2x"></span></th>
       {%endif%}
-      <td>{{datos.1}}</td>
-      <td>{{datos.2}}</td>
-      <td>{{datos.3}}</td>
-      <td><span name="paso_nombre" style="text-overflow: ellipsis;" alt="{{datos.4}}" title="{{datos.4}}">{{datos.4 | truncate(25)}}</span></td>
-      <td><span name="paso_nombre" style="text-overflow: ellipsis;" alt="{{datos.5}}" title="{{datos.5}}">{{datos.5 | truncate(30)}}</span></td>
-      <td><span name="paso_nombre" style="text-overflow: ellipsis;" alt="{{datos.6}}" title="{{datos.6}}">{{datos.6 | truncate(25)}}</span></td>
-      <td>{{datos.7}}</td>
+      <td>{{datos["beginDate"]}}</td>
+      <td>{{datos["solucionDate"]}}</td>
+      <td>{{datos["monitor"]}}</td>
+      <td>{{datos["clients"]}}</td>
+      <td>{{datos["problem"] | truncate(30)}}</td>
+      <td>{{datos["generateProblem"] | truncate(25)}}</td>
+      <td>{{datos["solution"]}}</td>
+      <td>{{datos["culpable"]}}</td>
 
     </tr>
   </tbody>

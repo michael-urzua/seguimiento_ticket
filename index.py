@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, session,redirect, url_for,sen
 from datetime import datetime, date, time, timedelta
 import requests
 from config import conexion_sqlite
-from data import consulta_busqueda,consulta_user_compania,actualiza_registro,consulta_inicial,consulta_host,insertar_registro
+from data import consulta_busqueda,consulta_user_compania,actualiza_registro,consulta_inicial,consulta_host,insertar_registro, clientMonitor
 from utils.get_token import get
 from utils.globals import url2,url_chek
 import sys
@@ -133,14 +133,7 @@ def consultar():
 
 	cursor=consulta_busqueda.select_consultar(fecha_inicial_1,fecha_inicial_2)
 	data = cursor.fetchall()
-	for f in data:
-		print("todo",f[3])
-
-
-
 	# cursor_cliente=consulta_busqueda_cliente.select_consultar_cliente(f,)
-
-
 	cursor_host=consulta_host.select_consultar_host()
 	host_name = cursor_host.fetchall()
 
@@ -155,7 +148,40 @@ def consultar():
 		cliente_usuario = cursor3.fetchall()
 		nombre = cliente_usuario[0][0]
 		cliente = cliente_usuario[0][1]
-		return render_template("template.html", data = data , ayer=fecha ,usuario = nombre , compania = cliente,host_name = host_name  )
+		newList=[]
+		for datas in data:
+			newMonitor='('
+			for monitor in datas[3]:
+				nameMonitor= clientMonitor.dataMonitor(monitor)[0][0]
+				newMonitor+=str(monitor)+'-'+str(nameMonitor)+","
+			newMonitor=newMonitor[:-1]
+			newMonitor+=')'
+			_query=clientMonitor.selectClientMonitor(datas[3])
+			#print _query
+			clientList=[]
+			for dato in _query:
+				clientList.append({"objetivo":dato[0], "nombre_cliente":dato[1], "estado":dato[2]})
+
+			clientsDown=[x for x in clientList if x["estado"]==True]
+			clientList= map(lambda x:x["nombre_cliente"], clientList)
+			clientList= str(clientList)[1:-1]
+			#print len(clientsDown)
+			if len(clientsDown)!=0:
+				clientList='Todos'
+			#cliprint entsQuery = _query.fetchall()
+			#print clientsQuery
+			dictData={}
+			dictData["status"]= datas[0]
+			dictData["beginDate"]=datas[1]
+			dictData["solutionDate"]=datas[2]
+			dictData["monitor"]=newMonitor
+			dictData["clients"]=clientList
+			dictData["problem"]=datas[5]
+			dictData["generateProblem"]=datas[6]
+			dictData["solution"]=datas[7]
+			dictData["culpable"]=datas[8]
+			newList.append(dictData)
+		return render_template("template.html", data = newList, ayer=fecha ,usuario = nombre , compania = cliente,host_name = host_name  )
 
 
 @app.route("/actualizar",methods=['POST'])
