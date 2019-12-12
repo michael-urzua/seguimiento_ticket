@@ -52,7 +52,7 @@ def acceso():
 			return redirect(url_for('inicio'))
 
 		else:
-			flash("Usuario y/o Clave son invalidos ")
+			flash("Usuario y/o Clave son invalidos","danger")
 			return redirect(url_for('index'))
 
 
@@ -75,7 +75,7 @@ def acceso():
 			session['token'] = token
 			return redirect(url_for('inicio'))
 		else:
-			flash("Usuario y/o Clave son invalidos ")
+			flash("Usuario y/o Clave son invalidos","danger")
 			return redirect(url_for('index'))
 
 @app.route('/inicio')
@@ -137,6 +137,7 @@ def inicio():
 			dictData["generateProblem"]=datas[5]
 			dictData["solution"]=datas[6]
 			dictData["culpable"]=datas[7]
+			dictData["id"]=datas[8]
 			newList.append(dictData)
 		return render_template("template.html", data = newList, usuario = usuario , compania = cliente,host_name = host_name  )
 		# return render_template("template.html" ,data = cursor, usuario = usuario , compania = cliente,host_name = host_name  )
@@ -180,6 +181,7 @@ def inicio():
 			dictData["generateProblem"]=datas[5]
 			dictData["solution"]=datas[6]
 			dictData["culpable"]=datas[7]
+			dictData["id"]=datas[8]
 			newList.append(dictData)
 		return render_template("template.html", data = newList, usuario = usuario , compania = cliente,host_name = host_name  )
 
@@ -246,6 +248,7 @@ def consultar():
 			dictData["generateProblem"]=datas[5]
 			dictData["solution"]=datas[6]
 			dictData["culpable"]=datas[7]
+			dictData["id"]=datas[8]
 			newList.append(dictData)
 		return render_template("template.html", data = newList, ayer=fecha ,usuario = usuario , compania = cliente,host_name = host_name  )
 
@@ -288,6 +291,7 @@ def consultar():
 			dictData["generateProblem"]=datas[5]
 			dictData["solution"]=datas[6]
 			dictData["culpable"]=datas[7]
+			dictData["id"]=datas[8]
 			newList.append(dictData)
 		return render_template("template.html", data = newList, ayer=fecha ,usuario = nombre , compania = cliente,host_name = host_name  )
 
@@ -301,10 +305,12 @@ def actualizar():
 		return render_template("login.html")
 
 
-	id		= request.form['id']
-	estado	= request.form['estado']
+	id			= request.form['id']
+	estado		= request.form['estado']
+	solucion	= request.form['solucion']
+	
 
-	cursor=actualiza_registro.update_registro(id,estado)
+	cursor=actualiza_registro.update_registro(id,estado,solucion)
 
 
 	#return render_template("template.html" ,persona = cursor ,ayer = yesterday)

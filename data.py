@@ -12,14 +12,6 @@ class consulta_inicial:
     def select_inicio():
         try:
             cursor = conexion.conect_post()
-            # cursor.execute("""SELECT
-            #                     estado,fecha_inicio_evento,fecha_solucion,inframonitor,
-            #                     coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
-            #                      FROM
-            #                         sisticket.registro_sisticket
-            #                     where
-            #                         fecha_inicio_evento::date  = (NOW()::date - INTERVAL '1 DAYS') """)
-
             cursor.execute("""SELECT
                                    estado,fecha_inicio_evento,fecha_solucion,inframonitor,
                                    coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
@@ -61,24 +53,24 @@ class consulta_busqueda:
                                     fecha_inicio_evento::date BETWEEN %s and %s order by fecha_inicio_evento asc""" , (fecha_inicial_1,fecha_inicial_2,))
              return cursor
         except:
-             flash("No se puede realizar busqueda de registro")
+             flash("NO SE PUEDE REALIZAR BUSQUEDA !!","danger" )
 
 class actualiza_registro:
     @staticmethod
-    def update_registro(id,estado):
+    def update_registro(id,estado,solucion):
         try:
-
+            fecha_actualizacion = datetime.now()
             local = session['option']
             if local == 'local':
                 usuario = session["usr_local"][0][0]
                 connection = psycopg2.connect(database = "central2010", user = "postgres", password = "", host = "172.16.5.117", port = "5432")
                 cursor=connection.cursor()
                 cursor.execute(""" UPDATE sisticket.registro_sisticket
-               							SET estado=%s,usuario_nombre_update=%s
+               							SET estado=%s,usuario_nombre_update=%s,solucion=%s,fecha_actualizacion=%s
             							WHERE id = %s
-            							""",(estado,usuario,id))
+            							""",(estado,usuario,solucion,fecha_actualizacion,id))
                 connection.commit()
-                flash("Datos Actualizados Correctamente")
+                flash("DATOS ACTUALIZADOS EXITOSAMENTE","success")
 
 
             else:
@@ -88,14 +80,14 @@ class actualiza_registro:
                 connection = psycopg2.connect(database = "central2010", user = "postgres", password = "", host = "172.16.5.117", port = "5432")
                 cursor=connection.cursor()
                 cursor.execute(""" UPDATE sisticket.registro_sisticket
-               							SET estado=%s,usuario_nombre_update=%s,usuario_id_update =%s
+               							SET estado=%s,usuario_nombre_update=%s,usuario_id_update =%s,solucion=%s,fecha_actualizacion=%s
             							WHERE id = %s
-            							""",(estado,usuario,usuario_id,id))
+            							""",(estado,usuario,usuario_id,solucion,fecha_actualizacion,id))
                 connection.commit()
-                flash("Datos Actualizados Correctamente")
+                flash("DATOS ACTUALIZADOS EXITOSAMENTE","success")
 
         except:
-            flash("No se puede actualizar")
+            flash("NO ES POSIBLE ACTUALIZAR !!","danger")
 
 class insertar_registro:
     @staticmethod
@@ -119,7 +111,7 @@ class insertar_registro:
                                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
             								   (id_datos, estado, usuario, fecha_inicio_evento,monitor,problema,fecha_creacion,culpable))
                 connection.commit()
-                flash("Datos Ingresados Correctamente")
+                flash("DATOS INGRESADOS CON EXITO","success")
                 return cursor
 
             else:
@@ -133,7 +125,7 @@ class insertar_registro:
             								    (id_datos, estado, usuario, usuario_id,fecha_inicio_evento,monitor,problema,fecha_creacion,culpable))
 
                 connection.commit()
-                flash("Datos Ingresados Correctamente")
+                flash("DATOS INGRESADOS CON EXITO","success")
                 return cursor
 
 class consulta_host:
@@ -146,7 +138,7 @@ class consulta_host:
                                 WHERE hostname is not null ORDER BY monitor_id;""" )
              return cursor
         except:
-             flash("No se puede realizar busqueda de registro")
+             flash("NO SE PUEDE REALIZAR LA BUSQUEDA DE REGISTRO","danger")
 
 class clientMonitor:
     @staticmethod
@@ -170,7 +162,7 @@ class clientMonitor:
              cursor = cursor.fetchall()
              return cursor
         except:
-             flash("No se puede realizar busqueda de registro")
+             flash("NO SE PUEDE REALIZAR LA BUSQUEDA DE REGISTRO","danger")
         return ''
 
     @staticmethod
@@ -184,5 +176,5 @@ class clientMonitor:
              cursor = cursor.fetchall()
              return cursor
         except:
-             flash("No se puede realizar busqueda de registro")
+             flash("NO SE PUEDE REALIZAR LA BUSQUEDA DE REGISTRO","danger")
         return ''
