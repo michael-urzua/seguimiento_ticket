@@ -12,13 +12,21 @@ class consulta_inicial:
     def select_inicio():
         try:
             cursor = conexion.conect_post()
+            # cursor.execute("""SELECT
+            #                     estado,fecha_inicio_evento,fecha_solucion,inframonitor,
+            #                     coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
+            #                      FROM
+            #                         sisticket.registro_sisticket
+            #                     where
+            #                         fecha_inicio_evento::date  = (NOW()::date - INTERVAL '1 DAYS') """)
+
             cursor.execute("""SELECT
-                                estado,fecha_inicio_evento,fecha_solucion,inframonitor,
-                                coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
-                                 FROM
-                                    sisticket.registro_sisticket
-                                where
-                                    fecha_inicio_evento::date  = (NOW()::date - INTERVAL '1 DAYS') """)
+                                   estado,fecha_inicio_evento,fecha_solucion,inframonitor,
+                                   coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
+                                FROM
+                                   sisticket.registro_sisticket
+                               where
+                                   fecha_inicio_evento::date = (NOW()::date - INTERVAL '1 DAYS') """)
             return cursor
         except:
          return False
@@ -168,6 +176,8 @@ class clientMonitor:
     @staticmethod
     def dataMonitor(id_monitor):
         _select=str("SELECT nombre from public.monitor where monitor_id=")+str(id_monitor)
+        if id_monitor>90000:
+            _select=str("SELECT infra_nombre from sisticket.infraestructura where infra_id=")+str(id_monitor)
         try:
              cursor = conexion.conect_post()
              cursor.execute(_select)

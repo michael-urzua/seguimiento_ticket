@@ -99,20 +99,91 @@ def inicio():
 
 	local = session['option']
 	if local == 'local':
-		cursor= conexion_sqlite.conect_sql()
-		respuesta = cursor.fetchall()
+		cursor_sqlite= conexion_sqlite.conect_sql()
+		respuesta = cursor_sqlite.fetchall()
 		session["usr_local"]=(respuesta)
 		usuario = session["usr_local"][0][0]
 		cliente = session["usr_local"][0][2]
 
-		return render_template("template.html" ,data = cursor, usuario = usuario , compania = cliente,host_name = host_name  )
+		newList=[]
+		for datas in cursor:
+			newMonitor='('
+			for monitor in datas[3]:
+				nameMonitor= clientMonitor.dataMonitor(monitor)[0][0]
+				newMonitor+=str(monitor)+'-'+str(nameMonitor)+","
+			newMonitor=newMonitor[:-1]
+			newMonitor+=')'
+			_query=clientMonitor.selectClientMonitor(datas[3])
+			#print _query
+			clientList=[]
+			for dato in _query:
+				clientList.append({"objetivo":dato[0], "nombre_cliente":dato[1], "estado":dato[2]})
+
+			clientsDown=[x for x in clientList if x["estado"]==True]
+			clientList= map(lambda x:x["nombre_cliente"], clientList)
+			clientList= str(clientList)[1:-1]
+			#print len(clientsDown)
+			if len(clientsDown)!=0:
+				clientList='Todos'
+			#cliprint entsQuery = _query.fetchall()
+			#print clientsQuery
+			dictData={}
+			dictData["status"]= datas[0]
+			dictData["beginDate"]=datas[1]
+			dictData["solutionDate"]=datas[2]
+			dictData["monitor"]=newMonitor
+			dictData["clients"]=clientList
+			dictData["problem"]=datas[4]
+			dictData["generateProblem"]=datas[5]
+			dictData["solution"]=datas[6]
+			dictData["culpable"]=datas[7]
+			newList.append(dictData)
+		return render_template("template.html", data = newList, usuario = usuario , compania = cliente,host_name = host_name  )
+		# return render_template("template.html" ,data = cursor, usuario = usuario , compania = cliente,host_name = host_name  )
+
 	else:
 		cursor1=consulta_user_compania.select_user_compania()
 		cliente_usuario = cursor1.fetchall()
 		session["usr_api"]=(cliente_usuario)
 		usuario = session["usr_api"][0][0]
 		cliente = session["usr_api"][0][1]
-		return render_template("template.html" ,data = cursor,usuario = usuario , compania = cliente,host_name = host_name )
+
+		newList=[]
+		for datas in cursor:
+			newMonitor='('
+			for monitor in datas[3]:
+				nameMonitor= clientMonitor.dataMonitor(monitor)[0][0]
+				newMonitor+=str(monitor)+'-'+str(nameMonitor)+","
+			newMonitor=newMonitor[:-1]
+			newMonitor+=')'
+			_query=clientMonitor.selectClientMonitor(datas[3])
+			#print _query
+			clientList=[]
+			for dato in _query:
+				clientList.append({"objetivo":dato[0], "nombre_cliente":dato[1], "estado":dato[2]})
+
+			clientsDown=[x for x in clientList if x["estado"]==True]
+			clientList= map(lambda x:x["nombre_cliente"], clientList)
+			clientList= str(clientList)[1:-1]
+			#print len(clientsDown)
+			if len(clientsDown)!=0:
+				clientList='Todos'
+			#cliprint entsQuery = _query.fetchall()
+			#print clientsQuery
+			dictData={}
+			dictData["status"]= datas[0]
+			dictData["beginDate"]=datas[1]
+			dictData["solutionDate"]=datas[2]
+			dictData["monitor"]=newMonitor
+			dictData["clients"]=clientList
+			dictData["problem"]=datas[4]
+			dictData["generateProblem"]=datas[5]
+			dictData["solution"]=datas[6]
+			dictData["culpable"]=datas[7]
+			newList.append(dictData)
+		return render_template("template.html", data = newList, usuario = usuario , compania = cliente,host_name = host_name  )
+
+		# return render_template("template.html" ,data = cursor,usuario = usuario , compania = cliente,host_name = host_name )
 
 
 @app.route("/consultar" ,methods=["GET","POST"])
@@ -142,7 +213,44 @@ def consultar():
 	if local == 'local':
 		usuario = session["usr_local"][0][0]
 		cliente = session["usr_local"][0][2]
-		return render_template("template.html", data = data , ayer=fecha, usuario = usuario , compania = cliente ,host_name = host_name  )
+
+		newList=[]
+		for datas in data:
+			newMonitor='('
+			for monitor in datas[3]:
+				nameMonitor= clientMonitor.dataMonitor(monitor)[0][0]
+				newMonitor+=str(monitor)+'-'+str(nameMonitor)+","
+			newMonitor=newMonitor[:-1]
+			newMonitor+=')'
+			_query=clientMonitor.selectClientMonitor(datas[3])
+			#print _query
+			clientList=[]
+			for dato in _query:
+				clientList.append({"objetivo":dato[0], "nombre_cliente":dato[1], "estado":dato[2]})
+
+			clientsDown=[x for x in clientList if x["estado"]==True]
+			clientList= map(lambda x:x["nombre_cliente"], clientList)
+			clientList= str(clientList)[1:-1]
+			#print len(clientsDown)
+			if len(clientsDown)!=0:
+				clientList='Todos'
+			#cliprint entsQuery = _query.fetchall()
+			#print clientsQuery
+			dictData={}
+			dictData["status"]= datas[0]
+			dictData["beginDate"]=datas[1]
+			dictData["solutionDate"]=datas[2]
+			dictData["monitor"]=newMonitor
+			dictData["clients"]=clientList
+			dictData["problem"]=datas[4]
+			dictData["generateProblem"]=datas[5]
+			dictData["solution"]=datas[6]
+			dictData["culpable"]=datas[7]
+			newList.append(dictData)
+		return render_template("template.html", data = newList, ayer=fecha ,usuario = usuario , compania = cliente,host_name = host_name  )
+
+
+		# return render_template("template.html", data = data , ayer=fecha, usuario = usuario , compania = cliente ,host_name = host_name  )
 	else:
 		cursor3=consulta_user_compania.select_user_compania()
 		cliente_usuario = cursor3.fetchall()
@@ -176,10 +284,10 @@ def consultar():
 			dictData["solutionDate"]=datas[2]
 			dictData["monitor"]=newMonitor
 			dictData["clients"]=clientList
-			dictData["problem"]=datas[5]
-			dictData["generateProblem"]=datas[6]
-			dictData["solution"]=datas[7]
-			dictData["culpable"]=datas[8]
+			dictData["problem"]=datas[4]
+			dictData["generateProblem"]=datas[5]
+			dictData["solution"]=datas[6]
+			dictData["culpable"]=datas[7]
 			newList.append(dictData)
 		return render_template("template.html", data = newList, ayer=fecha ,usuario = nombre , compania = cliente,host_name = host_name  )
 
