@@ -287,6 +287,9 @@ def consultar():
 			dictData["solutionDate"]=datas[2]
 			dictData["monitor"]=newMonitor
 			dictData["clients"]=clientList
+
+			dictData['qcliente']=len(str(clientList).split(','))
+
 			dictData["problem"]=datas[4]
 			dictData["generateProblem"]=datas[5]
 			dictData["solution"]=datas[6]
@@ -308,7 +311,6 @@ def actualizar():
 	id			= request.form['id']
 	estado		= request.form['estado']
 	solucion	= request.form['solucion']
-
 
 	cursor=actualiza_registro.update_registro(id,estado,solucion)
 
@@ -334,9 +336,12 @@ def insertar():
 		monitor_hostname_final=monitor_hostname_final+","+monitor_hostname_final2
 		monitor="{"+monitor_hostname_final[1:210]+"}"
 
-	problema	= request.form['problema']
-	culpable	= request.form['culpable']
-	cursor=insertar_registro.insert(estado,fecha_inicio_evento, monitor, problema,culpable)
+	problema				= request.form['problema']
+	culpable				= request.form['culpable']
+	fecha_solucion			= request.form['fecha_solucion']
+	fecha_aviso_clientes	= request.form['fecha_aviso_clientes']
+
+	cursor=insertar_registro.insert(estado,fecha_inicio_evento, monitor, problema,culpable,fecha_solucion,fecha_aviso_clientes)
 
 	return redirect(url_for('inicio'))
 

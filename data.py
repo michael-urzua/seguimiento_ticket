@@ -91,7 +91,7 @@ class actualiza_registro:
 
 class insertar_registro:
     @staticmethod
-    def insert(estado,fecha_inicio_evento, monitor, problema,culpable):
+    def insert(estado,fecha_inicio_evento, monitor, problema,culpable,fecha_solucion,fecha_aviso_clientes):
 
             cursor = conexion.conect_post()
 
@@ -107,9 +107,11 @@ class insertar_registro:
                 connection = psycopg2.connect(database = "central2010", user = "postgres", password = "", host = "172.16.5.117", port = "5432")
                 cursor=connection.cursor()
                 cursor.execute("""INSERT INTO sisticket.registro_sisticket
-                                            (id, estado, usuario_nombre_insert ,fecha_inicio_evento, inframonitor, problema,fecha_carga,culpable)
-                                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
-            								   (id_datos, estado, usuario, fecha_inicio_evento,monitor,problema,fecha_creacion,culpable))
+                                            (id, estado, usuario_nombre_insert ,fecha_inicio_evento, inframonitor, problema,fecha_carga,
+                                            culpable,fecha_solucion,fecha_aviso_clientes)
+                                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+            								   (id_datos, estado, usuario, fecha_inicio_evento,monitor,problema,fecha_creacion,culpable,
+                                                fecha_solucion,fecha_aviso_clientes))
                 connection.commit()
                 flash("DATOS INGRESADOS CON EXITO","success")
                 return cursor
@@ -120,9 +122,11 @@ class insertar_registro:
                 connection = psycopg2.connect(database = "central2010", user = "postgres", password = "", host = "172.16.5.117", port = "5432")
                 cursor=connection.cursor()
                 cursor.execute("""INSERT INTO sisticket.registro_sisticket
-                                                (id, estado,usuario_nombre_insert,usuario_id_insert,fecha_inicio_evento,inframonitor,problema,fecha_carga,culpable)
-                                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-            								    (id_datos, estado, usuario, usuario_id,fecha_inicio_evento,monitor,problema,fecha_creacion,culpable))
+                                                (id, estado,usuario_nombre_insert,usuario_id_insert,fecha_inicio_evento,inframonitor,problema,
+                                                fecha_carga,culpable,fecha_solucion,fecha_aviso_clientes)
+                                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+            								    (id_datos, estado, usuario, usuario_id,fecha_inicio_evento,monitor,problema,
+                                                fecha_creacion,culpable,fecha_solucion,fecha_aviso_clientes))
 
                 connection.commit()
                 flash("DATOS INGRESADOS CON EXITO","success")
@@ -148,7 +152,7 @@ class clientMonitor:
             newMon+=str(monitor)+','
         newMon= newMon[:-1]
         newMon+=')'
-        _select=str("SELECT distinct(c.cliente_id) as cliente_id, c.nombre, false AS infra_todocliente")
+        _select=str("SELECT distinct(c.cliente_id) as cliente_id, c.cliente_id ||'.'||c.nombre AS nombre, false AS infra_todocliente")
         _select+=" FROM public.cliente c, public.cliente_mapa_cliente_objetivo co"\
                 " WHERE c.cliente_id = co.cliente_id"\
                 " AND co.objetivo_id IN(SELECT Distinct(objetivo_id) FROM public.objetivo_config"\
