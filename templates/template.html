@@ -148,7 +148,7 @@ color:#de1b1b;
                          <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
                            <input type='text' class="form-control" name="fecha_inicio_evento" required data-date-format="YYYY-MM-DD HH:mm"
                                        oninvalid="setCustomValidity('El campo Fecha de Inicio Evento es obligatorio')"
-                                       oninput="setCustomValidity('')"/>
+                                       oninput="setCustomValidity('')" style="background-color: #fff5eb;" />
                              <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
                                  <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
                              </div>
@@ -168,7 +168,7 @@ color:#de1b1b;
                         <div class="form-group row">
                           <label for="inputpaso3" class="col-sm-3 col-form-label">Monitor HostName</label>
                             <div class="col-sm-9">
-                            <select class="selectpicker form-control" data-live-search="true" name="origen" id="origen" >
+                            <select class="selectpicker form-control" data-live-search="true" name="origen" id="origen" style="background-color: #fff5eb;" >
                               {% for h_name in host_name %}
                               <option data-tokens="{{h_name.0}}">{{h_name.1}}</option>
                               {%endfor%}
@@ -189,7 +189,7 @@ color:#de1b1b;
                         <div class="form-group row">
                           <label for="inputpaso3" class="col-sm-3 col-form-label"></label>
                             <div class="col-sm-9">
-                            <select name="monitor_hostname" id="monitor_hostname" multiple="multiple" size="8" class="form-control">
+                            <select name="monitor_hostname" id="monitor_hostname" multiple="multiple" size="8" class="form-control" style="background-color: #fff5eb;">
                             </select>
                           </div>
                         </div>
@@ -207,14 +207,14 @@ color:#de1b1b;
                       <div class="col-sm-9">
                         <textarea name="problema" id="problema" rows="5" cols="35" required
                                   oninvalid="setCustomValidity('El campo Problema es obligatorio')"
-                                  oninput="setCustomValidity('')"/></textarea>
+                                  oninput="setCustomValidity('')" style="background-color: #fff5eb;"/></textarea>
                       </div>
                     </div>
 
                     <div class="form-group row">
                       <label for="inputpaso3" class="col-sm-3 col-form-label">Culpable</label>
                         <div class="col-sm-9">
-                        <select class="selectpicker form-control" data-live-search="true" name="culpable" id="culpable" >
+                        <select class="selectpicker form-control" data-live-search="true" name="culpable" id="culpable" style="background-color: #fff5eb;" >
                           <option value="atentus">Atentus</option>
                           <option value="otro">Otro</option>
                         </select>
@@ -249,19 +249,21 @@ color:#de1b1b;
 <span class="counter pull-right"></span>
 <br>
 
+<button id="exportButton" class="btn btn-lg clearfix" style="background-color:rgb(23, 113, 11);color:#f0f0f0;">
+<span class="fa fa-file-excel-o" ></span> Exportar a Excel</button>
 <table id="example" class="table table-hover table-bordered results" style="width:100%">
   <thead style="background-color:rgb(236, 101, 14)">
     <tr>
       <th scope="col"><p style="color:#f0f0f0;">Accion</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Estado</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Fecha Inicio Evento</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Fecha Solucion</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Monitor Hostname</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Clientes Afectado</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Fecha_Inicio_Evento</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Fecha_Solucion</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Monitor_Hostname</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Clientes_Afectado</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Problema</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">Problema Generado</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Problema_Generado</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Solucion</p></th>
-      <th scope="col"><p style="color:#f0f0f0;">culpable</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Culpable</p></th>
     </tr>
 
   </thead>
@@ -299,12 +301,8 @@ color:#de1b1b;
                        </div>
                      </div>
 
-                     <div class="form-group row">
-                       <label for="inputobjetivo3" class="col-sm-3 col-form-label">Fecha Solución</label>
-                       <div class="col-sm-9">
-                         <input type="text" class="form-control" name="fecha_solucion"  disabled value="{{datos["solucionDate"]}}" style="background-color: #fff5eb;">
-                       </div>
-                     </div>
+
+
 
                      <div class="form-group row">
                        <label for="inputobjetivo3" class="col-sm-3 col-form-label" >Monitor Hostname</label>
@@ -320,9 +318,15 @@ color:#de1b1b;
                        <label for="inputobjetivo3" class="col-sm-3 col-form-label">Clientes</label>
                        <div class="col-sm-9">
 
+                         {% if datos["clients"] == '' %}
+                         <textarea name="clientes" rows="4" cols="35" required disabled
+                                   oninvalid="setCustomValidity('El campo Problema es obligatorio')"
+                                   oninput="setCustomValidity('')" style="background-color: #fff5eb;">SIN CLIENTES</textarea>
+                         {%else%}
                          <textarea name="clientes" rows="4" cols="35" required disabled
                                    oninvalid="setCustomValidity('El campo Problema es obligatorio')"
                                    oninput="setCustomValidity('')" style="background-color: #fff5eb;">{{datos["clients"]}}</textarea>
+                         {%endif%}
                        </div>
                      </div>
 
@@ -405,9 +409,14 @@ color:#de1b1b;
       <th><span class="far fa-times-circle  text-danger fa-2x"></span></th>
       {%endif%}
       <td>{{datos["beginDate"]}}</td>
-      <td>{{datos["solucionDate"]}}</td>
+      <td>{{datos["solutionDate"]}}</td>
       <td>{{datos["monitor"]}}</td>
+
+      {% if datos["clients"] == '' %}
+      <td>SIN CLIENTES</td>
+      {%else%}
       <td>{{datos["clients"]}}</td>
+      {%endif%}
       <td>{{datos["problem"] | truncate(30)}}</td>
       <td>{{datos["generateProblem"] | truncate(25)}}</td>
       <td>{{datos["solution"]}}</td>
@@ -462,8 +471,131 @@ $(document).ready(function() {
 });
 
 </script>
-
 </table>
+
+<!-- you need to include the shieldui css and js assets in order for the components to work -->
+<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
+<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/jszip.min.js"></script>
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#exportButton").click(function () {
+            // parse the HTML table element having an id=exportTable
+            var dataSource = shield.DataSource.create({
+                data: "#example",
+                schema: {
+                    type: "table",
+                    fields: {
+                        Fecha_Inicio_Evento: { type: toString() },
+                        Fecha_Solucion: { type: toString() },
+                        Monitor_Hostname: { type: String },
+                        Clientes_Afectado: { type: String },
+                        Problema: { type: String },
+                        Problema_Generado: { type: String },
+                        Solucion: { type: String },
+                        Culpable: { type: String }
+                    }
+                }
+            });
+
+            // when parsing is done, export the data to Excel
+            dataSource.read().then(function (data) {
+                new shield.exp.OOXMLWorkbook({
+                    author: "PrepBootstrap",
+                    worksheets: [
+                        {
+                            name: "PrepBootstrap Table",
+                            rows: [
+                                {
+                                    cells: [
+                                        {
+                                            style: {
+                                                bold: true
+                                            },
+                                            type: toString(),
+                                            value: "Fecha_Inicio_Evento"
+                                        },
+                                        {
+                                            style: {
+                                                bold: true
+                                            },
+                                            type: toString(),
+                                            value: "Fecha_Solucion"
+                                        },
+                                        {
+                                            style: {
+                                                bold: true
+                                            },
+                                            type: String,
+                                            value: "Monitor_Hostname"
+                                        },
+                                        {
+                                            style: {
+                                                bold: true
+                                            },
+                                            type: String,
+                                            value: "Clientes_Afectado"
+                                        },
+                                        {
+                                            style: {
+                                                bold: true
+                                            },
+                                            type: String,
+                                            value: "Problema"
+                                        },
+                                        {
+                                            style: {
+                                                bold: true
+                                            },
+                                            type: String,
+                                            value: "Problema_Generado"
+                                        },
+                                        {
+                                            style: {
+                                                bold: true
+                                            },
+                                            type: String,
+                                            value: "Solucion"
+                                        },
+                                        {
+                                            style: {
+                                                bold: true
+                                            },
+                                            type: String,
+                                            value: "Culpable"
+                                        }
+                                    ]
+                                }
+                            ].concat($.map(data, function(item) {
+                                return {
+                                    cells: [
+                                        { type: toString(), value: item.Fecha_Inicio_Evento },
+                                        { type: toString(), value: item.Fecha_Solucion },
+                                        { type: String, value: item.Monitor_Hostname },
+                                        { type: String, value: item.Clientes_Afectado },
+                                        { type: String, value: item.Problema },
+                                        { type: String, value: item.Problema_Generado },
+                                        { type: String, value: item.Solucion },
+                                        { type: String, value: item.Culpable }
+                                    ]
+                                };
+                            }))
+                        }
+                    ]
+                }).saveAs({
+                    fileName: "PrepBootstrapExcel"
+                });
+            });
+        });
+    });
+</script>
+
+<style>
+    #exportButton {
+        border-radius: 0;
+    }
+</style>
 
 </div>
 

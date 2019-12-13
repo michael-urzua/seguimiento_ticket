@@ -308,7 +308,7 @@ def actualizar():
 	id			= request.form['id']
 	estado		= request.form['estado']
 	solucion	= request.form['solucion']
-	
+
 
 	cursor=actualiza_registro.update_registro(id,estado,solucion)
 
