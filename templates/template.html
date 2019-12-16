@@ -190,7 +190,7 @@ color:#de1b1b;
                                      </script>
 
                                      <div class="form-group row" >
-                                       <label for="inputpaso3" class="col-sm-3 col-form-label">Fecha Solucion</label>
+                                       <label for="inputpaso3" class="col-sm-3 col-form-label">Fecha Aviso Cliente</label>
                                        <div class="col-sm-9">
                                          <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
                                            <input type='text' class="form-control" name="fecha_aviso_clientes" required data-date-format="YYYY-MM-DD HH:mm"
@@ -298,7 +298,7 @@ color:#de1b1b;
 
 <button id="exportButton" data-toggle="tooltip" title="Exportar Excel" class="btn btn-lg clearfix" style="background-color:rgb(23, 113, 11);color:#f0f0f0;float:right">
 <span class="fas fa-file-excel" ></span> </button>
-<table id="example" class="table table-hover table-bordered results" style="width:100%">
+<table id="example" class="table table-hover table-bordered results" style="width:100%; text-align: center;">
   <thead style="background-color:rgb(236, 101, 14)">
     <tr>
       <th scope="col"><p style="color:#f0f0f0;">Accion</p></th>
@@ -361,6 +361,17 @@ color:#de1b1b;
                      </div>
 
                      <div class="form-group row">
+                       <label for="inputobjetivo3" class="col-sm-3 col-form-label">Fecha Solucion</label>
+                       <div class="col-sm-9">
+                         <input type="hidden" class="form-control" name="id"  value="{{datos["id"]}}">
+                         <input type="text" class="form-control" name="fecha_solucion"  value="{{datos["solutionDate"]}}">
+                       </div>
+                     </div>
+
+
+
+
+                     <div class="form-group row">
                        <label for="inputobjetivo3" class="col-sm-3 col-form-label">Clientes</label>
                        <div class="col-sm-9">
 
@@ -389,9 +400,9 @@ color:#de1b1b;
                      <div class="form-group row">
                        <label for="inputobservacion3" class="col-sm-3 col-form-label">Problema Generado</label>
                        <div class="col-sm-9">
-                         <textarea name="problema_genera" rows="4" cols="35" required disabled
+                         <textarea name="problema_genera" rows="4" cols="35" required 
                                    oninvalid="setCustomValidity('El campo Problema Generado es obligatorio')"
-                                   oninput="setCustomValidity('')" style="background-color: #fff5eb;">{{datos.generateProblem}}</textarea>
+                                   oninput="setCustomValidity('')" >{{datos.generateProblem}}</textarea>
 
                        </div>
                      </div>
@@ -401,7 +412,7 @@ color:#de1b1b;
                        <div class="col-sm-9">
                          <textarea name="solucion" rows="4" cols="35" required
                                    oninvalid="setCustomValidity('El campo Solución es obligatorio')"
-                                   oninput="setCustomValidity('')" style="background-color: #fff5eb;">{{datos.solution}}</textarea>
+                                   oninput="setCustomValidity('')">{{datos.solution}}</textarea>
 
                        </div>
                      </div>

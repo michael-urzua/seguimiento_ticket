@@ -57,7 +57,7 @@ class consulta_busqueda:
 
 class actualiza_registro:
     @staticmethod
-    def update_registro(id,estado,solucion):
+    def update_registro(id,estado,solucion,fecha_solucion,problema_genera):
         try:
             fecha_actualizacion = datetime.now()
             local = session['option']
@@ -66,9 +66,9 @@ class actualiza_registro:
                 connection = psycopg2.connect(database = "central2010", user = "postgres", password = "", host = "172.16.5.117", port = "5432")
                 cursor=connection.cursor()
                 cursor.execute(""" UPDATE sisticket.registro_sisticket
-               							SET estado=%s,usuario_nombre_update=%s,solucion=%s,fecha_actualizacion=%s
+               							SET estado=%s,usuario_nombre_update=%s,solucion=%s,fecha_actualizacion=%s,fecha_solucion =%s, problema_genera=%s
             							WHERE id = %s
-            							""",(estado,usuario,solucion,fecha_actualizacion,id))
+            							""",(estado,usuario,solucion,fecha_actualizacion,fecha_solucion,problema_genera,id))
                 connection.commit()
                 flash("DATOS ACTUALIZADOS EXITOSAMENTE","success")
 
@@ -80,9 +80,9 @@ class actualiza_registro:
                 connection = psycopg2.connect(database = "central2010", user = "postgres", password = "", host = "172.16.5.117", port = "5432")
                 cursor=connection.cursor()
                 cursor.execute(""" UPDATE sisticket.registro_sisticket
-               							SET estado=%s,usuario_nombre_update=%s,usuario_id_update =%s,solucion=%s,fecha_actualizacion=%s
+               							SET estado=%s,usuario_nombre_update=%s,usuario_id_update =%s,solucion=%s,fecha_actualizacion=%s,fecha_solucion=%s,problema_genera=%s
             							WHERE id = %s
-            							""",(estado,usuario,usuario_id,solucion,fecha_actualizacion,id))
+            							""",(estado,usuario,usuario_id,solucion,fecha_actualizacion,fecha_solucion,problema_genera,id))
                 connection.commit()
                 flash("DATOS ACTUALIZADOS EXITOSAMENTE","success")
 

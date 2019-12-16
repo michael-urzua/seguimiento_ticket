@@ -114,7 +114,6 @@ def inicio():
 			newMonitor=newMonitor[:-1]
 			newMonitor+=')'
 			_query=clientMonitor.selectClientMonitor(datas[3])
-			#print _query
 			clientList=[]
 			for dato in _query:
 				clientList.append({"objetivo":dato[0], "nombre_cliente":dato[1], "estado":dato[2]})
@@ -122,17 +121,16 @@ def inicio():
 			clientsDown=[x for x in clientList if x["estado"]==True]
 			clientList= map(lambda x:x["nombre_cliente"], clientList)
 			clientList= str(clientList)[1:-1]
-			#print len(clientsDown)
+
 			if len(clientsDown)!=0:
 				clientList='Todos'
-			#cliprint entsQuery = _query.fetchall()
-			#print clientsQuery
 			dictData={}
 			dictData["status"]= datas[0]
 			dictData["beginDate"]=datas[1]
 			dictData["solutionDate"]=datas[2]
 			dictData["monitor"]=newMonitor
 			dictData["clients"]=clientList
+			dictData['qcliente']=len(str(clientList).split(','))
 			dictData["problem"]=datas[4]
 			dictData["generateProblem"]=datas[5]
 			dictData["solution"]=datas[6]
@@ -140,7 +138,6 @@ def inicio():
 			dictData["id"]=datas[8]
 			newList.append(dictData)
 		return render_template("template.html", data = newList, usuario = usuario , compania = cliente,host_name = host_name  )
-		# return render_template("template.html" ,data = cursor, usuario = usuario , compania = cliente,host_name = host_name  )
 
 	else:
 		cursor1=consulta_user_compania.select_user_compania()
@@ -158,7 +155,7 @@ def inicio():
 			newMonitor=newMonitor[:-1]
 			newMonitor+=')'
 			_query=clientMonitor.selectClientMonitor(datas[3])
-			#print _query
+
 			clientList=[]
 			for dato in _query:
 				clientList.append({"objetivo":dato[0], "nombre_cliente":dato[1], "estado":dato[2]})
@@ -166,17 +163,16 @@ def inicio():
 			clientsDown=[x for x in clientList if x["estado"]==True]
 			clientList= map(lambda x:x["nombre_cliente"], clientList)
 			clientList= str(clientList)[1:-1]
-			#print len(clientsDown)
+
 			if len(clientsDown)!=0:
 				clientList='Todos'
-			#cliprint entsQuery = _query.fetchall()
-			#print clientsQuery
 			dictData={}
 			dictData["status"]= datas[0]
 			dictData["beginDate"]=datas[1]
 			dictData["solutionDate"]=datas[2]
 			dictData["monitor"]=newMonitor
 			dictData["clients"]=clientList
+			dictData['qcliente']=len(str(clientList).split(','))
 			dictData["problem"]=datas[4]
 			dictData["generateProblem"]=datas[5]
 			dictData["solution"]=datas[6]
@@ -185,7 +181,6 @@ def inicio():
 			newList.append(dictData)
 		return render_template("template.html", data = newList, usuario = usuario , compania = cliente,host_name = host_name  )
 
-		# return render_template("template.html" ,data = cursor,usuario = usuario , compania = cliente,host_name = host_name )
 
 
 @app.route("/consultar" ,methods=["GET","POST"])
@@ -198,7 +193,6 @@ def consultar():
 		return render_template("login.html")
 
 	fecha  = request.form['fecha']
-
 	fecha_inicial_1=fecha.split(" ")[0]
 	fecha_inicial_2=fecha.split(" ")[2]
 	fecha_inicial_1= datetime.strptime(str(fecha_inicial_1), '%d/%m/%Y')
@@ -206,7 +200,6 @@ def consultar():
 
 	cursor=consulta_busqueda.select_consultar(fecha_inicial_1,fecha_inicial_2)
 	data = cursor.fetchall()
-	# cursor_cliente=consulta_busqueda_cliente.select_consultar_cliente(f,)
 	cursor_host=consulta_host.select_consultar_host()
 	host_name = cursor_host.fetchall()
 
@@ -225,7 +218,6 @@ def consultar():
 			newMonitor=newMonitor[:-1]
 			newMonitor+=')'
 			_query=clientMonitor.selectClientMonitor(datas[3])
-			#print _query
 			clientList=[]
 			for dato in _query:
 				clientList.append({"objetivo":dato[0], "nombre_cliente":dato[1], "estado":dato[2]})
@@ -233,17 +225,16 @@ def consultar():
 			clientsDown=[x for x in clientList if x["estado"]==True]
 			clientList= map(lambda x:x["nombre_cliente"], clientList)
 			clientList= str(clientList)[1:-1]
-			#print len(clientsDown)
+
 			if len(clientsDown)!=0:
 				clientList='Todos'
-			#cliprint entsQuery = _query.fetchall()
-			#print clientsQuery
 			dictData={}
 			dictData["status"]= datas[0]
 			dictData["beginDate"]=datas[1]
 			dictData["solutionDate"]=datas[2]
 			dictData["monitor"]=newMonitor
 			dictData["clients"]=clientList
+			dictData['qcliente']=len(str(clientList).split(','))
 			dictData["problem"]=datas[4]
 			dictData["generateProblem"]=datas[5]
 			dictData["solution"]=datas[6]
@@ -252,8 +243,6 @@ def consultar():
 			newList.append(dictData)
 		return render_template("template.html", data = newList, ayer=fecha ,usuario = usuario , compania = cliente,host_name = host_name  )
 
-
-		# return render_template("template.html", data = data , ayer=fecha, usuario = usuario , compania = cliente ,host_name = host_name  )
 	else:
 		cursor3=consulta_user_compania.select_user_compania()
 		cliente_usuario = cursor3.fetchall()
@@ -268,7 +257,6 @@ def consultar():
 			newMonitor=newMonitor[:-1]
 			newMonitor+=')'
 			_query=clientMonitor.selectClientMonitor(datas[3])
-			#print _query
 			clientList=[]
 			for dato in _query:
 				clientList.append({"objetivo":dato[0], "nombre_cliente":dato[1], "estado":dato[2]})
@@ -276,20 +264,16 @@ def consultar():
 			clientsDown=[x for x in clientList if x["estado"]==True]
 			clientList= map(lambda x:x["nombre_cliente"], clientList)
 			clientList= str(clientList)[1:-1]
-			#print len(clientsDown)
+			
 			if len(clientsDown)!=0:
 				clientList='Todos'
-			#cliprint entsQuery = _query.fetchall()
-			#print clientsQuery
 			dictData={}
 			dictData["status"]= datas[0]
 			dictData["beginDate"]=datas[1]
 			dictData["solutionDate"]=datas[2]
 			dictData["monitor"]=newMonitor
 			dictData["clients"]=clientList
-
 			dictData['qcliente']=len(str(clientList).split(','))
-
 			dictData["problem"]=datas[4]
 			dictData["generateProblem"]=datas[5]
 			dictData["solution"]=datas[6]
@@ -311,11 +295,11 @@ def actualizar():
 	id			= request.form['id']
 	estado		= request.form['estado']
 	solucion	= request.form['solucion']
+	fecha_solucion	= request.form['fecha_solucion']
+	problema_genera	= request.form['problema_genera']
 
-	cursor=actualiza_registro.update_registro(id,estado,solucion)
+	cursor=actualiza_registro.update_registro(id,estado,solucion,fecha_solucion,problema_genera)
 
-
-	#return render_template("template.html" ,persona = cursor ,ayer = yesterday)
 	return redirect(url_for('inicio'))
 
 @app.route("/insertar",methods=['POST'])
