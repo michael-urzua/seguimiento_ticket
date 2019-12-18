@@ -141,7 +141,7 @@ color:#de1b1b;
         </div>
 
         <div class="modal-body" >
-          <!-- INICIO FORMULARIO ACTUALIZA -->
+          <!-- INICIO FORMULARIO INSERTAR -->
              <div class="form-group row" >
                        <label for="inputpaso3" class="col-sm-3 col-form-label">Fecha Inicio Evento</label>
                        <div class="col-sm-9">
@@ -190,7 +190,7 @@ color:#de1b1b;
                                      </script>
 
                                      <div class="form-group row" >
-                                       <label for="inputpaso3" class="col-sm-3 col-form-label">Fecha Aviso Cliente</label>
+                                       <label for="inputpaso3" class="col-sm-3 col-form-label">Fecha de aviso por parte de AtClientes</label>
                                        <div class="col-sm-9">
                                          <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
                                            <input type='text' class="form-control" name="fecha_aviso_clientes" required data-date-format="YYYY-MM-DD HH:mm"
@@ -259,6 +259,26 @@ color:#de1b1b;
                     </div>
 
                     <div class="form-group row">
+                      <label for="inputobservacion3" class="col-sm-3 col-form-label">Problema Generado</label>
+                      <div class="col-sm-9">
+                        <textarea name="problema_genera" id="problema_genera" rows="5" cols="35" required
+                                  oninvalid="setCustomValidity('El campo Problema Generado es obligatorio')"
+                                  oninput="setCustomValidity('')" style="background-color: #fff5eb;"/></textarea>
+                      </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                      <label for="inputobservacion3" class="col-sm-3 col-form-label">Solucion</label>
+                      <div class="col-sm-9">
+                        <textarea name="solucion" id="solucion" rows="5" cols="35" required
+                                  oninvalid="setCustomValidity('El campo Solucion es obligatorio')"
+                                  oninput="setCustomValidity('')" style="background-color: #fff5eb;"/></textarea>
+                      </div>
+                    </div>
+
+
+                    <div class="form-group row">
                       <label for="inputpaso3" class="col-sm-3 col-form-label">Culpable</label>
                         <div class="col-sm-9">
                         <select class="selectpicker form-control" data-live-search="true" name="culpable" id="culpable" style="background-color: #fff5eb;" >
@@ -305,6 +325,7 @@ color:#de1b1b;
       <th scope="col"><p style="color:#f0f0f0;">Estado</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Fecha_Inicio_Evento</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Fecha_Solucion</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">fecha_aviso_clientes</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Monitor_Hostname</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Clientes_Afectado</p></th>
       <th scope="col"><p style="color:#f0f0f0;">Número_Clientes_Afectado</p></th>
@@ -349,6 +370,19 @@ color:#de1b1b;
                        </div>
                      </div>
 
+                     <div class="form-group row">
+                       <label for="inputobjetivo3" class="col-sm-3 col-form-label">Fecha Solucion</label>
+                       <div class="col-sm-9">
+                         <input type="text" class="form-control" name="fecha_solucion"  value="{{datos["solutionDate"]}}">
+                       </div>
+                     </div>
+
+                     <div class="form-group row">
+                       <label for="inputobjetivo3" class="col-sm-3 col-form-label">Fecha de aviso por parte de AtClientes</label>
+                       <div class="col-sm-9">
+                         <input type="text" class="form-control" name="fecha_aviso_clientes"  value="{{datos["fechAvisoCli"]}}">
+                       </div>
+                     </div>
 
                      <div class="form-group row">
                        <label for="inputobjetivo3" class="col-sm-3 col-form-label" >Monitor Hostname</label>
@@ -360,13 +394,6 @@ color:#de1b1b;
                        </div>
                      </div>
 
-                     <div class="form-group row">
-                       <label for="inputobjetivo3" class="col-sm-3 col-form-label">Fecha Solucion</label>
-                       <div class="col-sm-9">
-                         <input type="hidden" class="form-control" name="id"  value="{{datos["id"]}}">
-                         <input type="text" class="form-control" name="fecha_solucion"  value="{{datos["solutionDate"]}}">
-                       </div>
-                     </div>
 
 
 
@@ -390,9 +417,9 @@ color:#de1b1b;
                      <div class="form-group row">
                        <label for="inputobservacion3" class="col-sm-3 col-form-label">Problema</label>
                        <div class="col-sm-9">
-                         <textarea name="problema" rows="4" cols="35" required disabled
+                         <textarea name="problema" rows="4" cols="35" required
                                    oninvalid="setCustomValidity('El campo Problema es obligatorio')"
-                                   oninput="setCustomValidity('')" style="background-color: #fff5eb;">{{datos.problem}}</textarea>
+                                   oninput="setCustomValidity('')" >{{datos.problem}}</textarea>
 
                        </div>
                      </div>
@@ -400,7 +427,7 @@ color:#de1b1b;
                      <div class="form-group row">
                        <label for="inputobservacion3" class="col-sm-3 col-form-label">Problema Generado</label>
                        <div class="col-sm-9">
-                         <textarea name="problema_genera" rows="4" cols="35" required 
+                         <textarea name="problema_genera" rows="4" cols="35" required
                                    oninvalid="setCustomValidity('El campo Problema Generado es obligatorio')"
                                    oninput="setCustomValidity('')" >{{datos.generateProblem}}</textarea>
 
@@ -420,14 +447,23 @@ color:#de1b1b;
                      <div class="form-group row">
                        <label for="inputobjetivo3" class="col-sm-3 col-form-label">Culpable</label>
                        <div class="col-sm-9">
-                         <input type="text" class="form-control" name="culpable"  disabled value="{{datos["culpable"]}}" style="background-color: #fff5eb;">
+                         <select class="form-control" name="culpable">
+                           {% if datos.culpable  == 'atentus' %}
+                           <option value="atentus">Atentus</option>
+                           <option value="otro">Otro</option>
+                           {%else%}
+                           <option value="otro">Otro</option>
+                           <option value="atentus">Atentus</option>
+                           {%endif%}
+                         </select>
+
                        </div>
                      </div>
 
                      <div class="form-group row">
                        <label for="input3" class="col-sm-3 col-form-label">Activo</label>
                        <div class="col-sm-9">
-                         <select class="form-control" name="estado" style="background-color: #fff5eb;">
+                         <select class="form-control" name="estado">
                            {% if datos.status  == True %}
                            <option value="t">Habilitado</option>
                            <option value="f">Deshabilitado</option>
@@ -467,21 +503,22 @@ color:#de1b1b;
       {%endif%}
       <td>{{datos["beginDate"]}}</td>
       <td>{{datos["solutionDate"]}}</td>
-      <td>{{datos["monitor"]}}</td>
-
+      <td>{{datos["fechAvisoCli"]}}</td>
+      <td>{{datos["monitor"] | truncate(30) }}</td>
       {% if datos["clients"] == '' %}
       <td>SIN CLIENTES</td>
       {%else%}
-      <td>{{datos["clients"]}}</td>
+      <td><span  style="text-overflow: ellipsis;" alt="{{datos["clients"]}}" title="{{datos["clients"]}}">{{datos["clients"] | truncate(50)}}</span></td>
       {%endif%}
       <td>{{datos.qcliente}}</td>
-      <td>{{datos["problem"] | truncate(30)}}</td>
-      <td>{{datos["generateProblem"] | truncate(25)}}</td>
+      <td><span  style="text-overflow: ellipsis;" alt="{{datos["problem"]}}" title="{{datos["problem"]}}">{{datos["problem"] | truncate(50)}}</span></td>
+      <td><span  style="text-overflow: ellipsis;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
       <td>{{datos["solution"]}}</td>
       <td>{{datos["culpable"]}}</td>
 
     </tr>
   </tbody>
+  
   {% endfor %}
   <script type="text/javascript">
   $(document).ready(function() {
