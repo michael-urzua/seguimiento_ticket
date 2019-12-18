@@ -20,7 +20,7 @@ class consulta_inicial:
                                 FROM
                                    sisticket.registro_sisticket
                                where
-                                   fecha_inicio_evento::date = (NOW()::date - INTERVAL '1 DAYS') """)
+                                   fecha_inicio_evento::date = (NOW()::date - INTERVAL '1 DAYS') order by estado, fecha_inicio_evento asc""")
             return cursor
         except:
             return False
@@ -48,12 +48,13 @@ class consulta_busqueda:
         try:
             cursor = conexion.conect_post()
             cursor.execute("""SELECT
-                                	estado,fecha_inicio_evento,fecha_solucion,fecha_aviso_clientes,inframonitor,
+                                	estado,fecha_inicio_evento,coalesce(CAST(fecha_solucion AS VARCHAR(25)),'SIN FECHA'),
+                                    coalesce(CAST(fecha_aviso_clientes AS VARCHAR(25)),'SIN FECHA'),inframonitor,
                                 	coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
                                  FROM
                                     sisticket.registro_sisticket
                                 where
-                                    fecha_inicio_evento::date BETWEEN %s and %s order by fecha_inicio_evento asc""", (fecha_inicial_1, fecha_inicial_2,))
+                                    fecha_inicio_evento::date BETWEEN %s and %s order by estado, fecha_inicio_evento asc""", (fecha_inicial_1, fecha_inicial_2,))
             return cursor
         except:
             flash("NO SE PUEDE REALIZAR BUSQUEDA !!", "danger")
@@ -75,7 +76,7 @@ class actualiza_registro:
                                         problema_genera=%s,solucion=%s,culpable=%s,estado=%s
             							WHERE id = %s
             							""", (usuario,fecha_solucion,fecha_aviso_clientes,problema,problema_genera,solucion,culpable,estado,id))
-                
+
                 connection.commit()
                 flash("DATOS ACTUALIZADOS EXITOSAMENTE", "success")
 

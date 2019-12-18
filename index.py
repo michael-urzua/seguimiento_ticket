@@ -217,12 +217,12 @@ def consultar():
         newList = []
         for datas in data:
             newMonitor = '('
-            for monitor in datas[3]:
+            for monitor in datas[4]:
                 nameMonitor = clientMonitor.dataMonitor(monitor)[0][0]
                 newMonitor += str(monitor) + '-' + str(nameMonitor) + ","
             newMonitor = newMonitor[:-1]
             newMonitor += ')'
-            _query = clientMonitor.selectClientMonitor(datas[3])
+            _query = clientMonitor.selectClientMonitor(datas[4])
             clientList = []
             for dato in _query:
                 clientList.append(
@@ -238,7 +238,7 @@ def consultar():
             dictData["status"] = datas[0]
             dictData["beginDate"] = datas[1]
             dictData["solutionDate"] = datas[2]
-            dictData["fechAvisoCli"] = datas[4]
+            dictData["fechAvisoCli"] = datas[3]
             dictData["monitor"] = newMonitor
             dictData["clients"] = clientList
             dictData['qcliente'] = len(str(clientList).split(','))
@@ -258,12 +258,12 @@ def consultar():
         newList = []
         for datas in data:
             newMonitor = '('
-            for monitor in datas[3]:
+            for monitor in datas[4]:
                 nameMonitor = clientMonitor.dataMonitor(monitor)[0][0]
                 newMonitor += str(monitor) + '-' + str(nameMonitor) + ","
             newMonitor = newMonitor[:-1]
             newMonitor += ')'
-            _query = clientMonitor.selectClientMonitor(datas[3])
+            _query = clientMonitor.selectClientMonitor(datas[4])
             clientList = []
             for dato in _query:
                 clientList.append(
@@ -273,13 +273,14 @@ def consultar():
             clientList = map(lambda x: x["nombre_cliente"], clientList)
             clientList = str(clientList)[1:-1]
 
+
             if len(clientsDown) != 0:
                 clientList = 'Todos'
             dictData = {}
             dictData["status"] = datas[0]
             dictData["beginDate"] = datas[1]
             dictData["solutionDate"] = datas[2]
-            dictData["fechAvisoCli"] = datas[4]
+            dictData["fechAvisoCli"] = datas[3]
             dictData["monitor"] = newMonitor
             dictData["clients"] = clientList
             dictData['qcliente'] = len(str(clientList).split(','))
