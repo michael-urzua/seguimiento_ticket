@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, s
 from datetime import datetime, date, time, timedelta
 import requests
 from config import conexion_sqlite
-from data import consulta_busqueda, consulta_user_compania, actualiza_registro, consulta_inicial, consulta_host, insertar_registro, clientMonitor
+from data import consulta_busqueda, consulta_user_compania, actualiza_registro, consulta_inicial, consulta_host, insertar_registro, clientMonitor, consulta_perfil
 from utils.get_token import get
 from utils.globals import url2, url_chek
 import sys
@@ -92,11 +92,19 @@ def inicio():
     cursor = consulta_inicial.select_inicio()
     if cursor == False:
 
-        flash("No hay conexion a la BD")
+        flash("No hay conexion a la BD","danger")
         return redirect(url_for('index'))
+
 
     cursor_host = consulta_host.select_consultar_host()
     host_name = cursor_host.fetchall()
+
+    #PERFIL
+    cursor_perfil = consulta_perfil.select_perfil()
+    perfil_name = cursor_perfil.fetchall()
+
+
+    print(perfil_name)
 
     local = session['option']
     if local == 'local':
@@ -140,6 +148,7 @@ def inicio():
             dictData["culpable"] = datas[8]
             dictData["id"] = datas[9]
             newList.append(dictData)
+
         return render_template("template.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
 
     else:
@@ -184,7 +193,16 @@ def inicio():
             dictData["culpable"] = datas[8]
             dictData["id"] = datas[9]
             newList.append(dictData)
-        return render_template("template.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+
+        if perfil_name[0][0] == 'administrador' and perfil_name[0][1] == 'si' :
+            return render_template("template.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+        elif perfil_name[0][0] == 'lectura' and perfil_name[0][1] == 'si' :
+            return render_template("template_noEdit.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+        elif perfil_name[0][1] == 'no' :
+            flash("NO TIENE PERFIL ACTIVO","danger")
+            return redirect(url_for('index'))
+
+
 
 
 @app.route("/consultar", methods=["GET", "POST"])
@@ -345,6 +363,38 @@ def insertar():
                                       culpable, fecha_solucion, fecha_aviso_clientes, problema_genera, solucion)
 
     return redirect(url_for('inicio'))
+
+
+
+@app.route("/mantenedor",methods=["GET","POST"])
+def mantenedor():
+
+	if len(session) == 0:
+		return redirect(url_for('index'))
+
+	variable = session_token(session)
+	if variable == 'False':
+		return render_template("login.html")
+
+
+	local = session['option']
+
+	if local == 'local':
+		cursor4= conexion_sqlite.conect_sql()
+		respuesta = cursor4.fetchall()
+		nombre = respuesta[0][0]
+		cliente = respuesta[0][2]
+		return render_template("mantenedor.html", usuario = nombre , compania = cliente)
+	else:
+		cursor3=consulta_user_compania.select_user_compania()
+		cliente_usuario = cursor3.fetchall()
+		nombre = cliente_usuario[0][0]
+		cliente = cliente_usuario[0][1]
+
+		return render_template("mantenedor.html", usuario = nombre , compania = cliente)
+
+
+
 
 
 if(__name__ == "__main__"):

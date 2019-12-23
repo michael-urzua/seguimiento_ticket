@@ -18,7 +18,7 @@ class consulta_inicial:
                                    estado,fecha_inicio_evento,fecha_solucion,inframonitor,fecha_aviso_clientes,
                                    coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
                                 FROM
-                                   sisticket.registro_sisticket
+                                   sisreg.registro_sisticket
                                where
                                    fecha_inicio_evento::date = (NOW()::date - INTERVAL '1 DAYS') order by estado, fecha_inicio_evento asc""")
             return cursor
@@ -42,6 +42,22 @@ class consulta_user_compania:
             return False
 
 
+class consulta_perfil:
+    @staticmethod
+    def select_perfil():
+        try:
+            # usuario = session['cliente_usuario_id']
+            cursor = conexion.conect_post()
+
+            cursor.execute("""SELECT a1.nombre_perfil, b2.activo
+                                  FROM sisreg.perfil a1 inner join sisreg.perfil_usuario b2
+                                  ON a1.perfil_id = b2.perfil_id
+                                  where b2.cliente_usuario_id = '9461'""")
+            return cursor
+        except:
+         return False
+
+
 class consulta_busqueda:
     @staticmethod
     def select_consultar(fecha_inicial_1, fecha_inicial_2):
@@ -52,7 +68,7 @@ class consulta_busqueda:
                                     coalesce(CAST(fecha_aviso_clientes AS VARCHAR(25)),'SIN FECHA'),inframonitor,
                                 	coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
                                  FROM
-                                    sisticket.registro_sisticket
+                                    sisreg.registro_sisticket
                                 where
                                     fecha_inicio_evento::date BETWEEN %s and %s order by estado, fecha_inicio_evento asc""", (fecha_inicial_1, fecha_inicial_2,))
             return cursor
@@ -71,7 +87,7 @@ class actualiza_registro:
                 connection = psycopg2.connect(
                     database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
                 cursor = connection.cursor()
-                cursor.execute(""" UPDATE sisticket.registro_sisticket
+                cursor.execute(""" UPDATE sisreg.registro_sisticket
                							SET usuario_nombre_update=%s,fecha_solucion=%s,fecha_aviso_clientes=%s,problema=%s,
                                         problema_genera=%s,solucion=%s,culpable=%s,estado=%s
             							WHERE id = %s
@@ -87,7 +103,7 @@ class actualiza_registro:
                 connection = psycopg2.connect(
                     database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
                 cursor = connection.cursor()
-                cursor.execute(""" UPDATE sisticket.registro_sisticket
+                cursor.execute(""" UPDATE sisreg.registro_sisticket
                							SET usuario_nombre_update=%s,usuario_id_update =%s,fecha_solucion=%s,fecha_aviso_clientes=%s,problema=%s,
                                         problema_genera=%s,solucion=%s,culpable=%s,estado=%s
             							WHERE id = %s
@@ -107,7 +123,7 @@ class insertar_registro:
         cursor = conexion.conect_post()
 
         cursor.execute(
-            "SELECT MAX( id ) + 1 FROM sisticket.registro_sisticket")
+            "SELECT MAX( id ) + 1 FROM sisreg.registro_sisticket")
         id_datos = cursor.fetchone()
 
         # FECHA ACTUAL
@@ -119,7 +135,7 @@ class insertar_registro:
             connection = psycopg2.connect(
                 database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
             cursor = connection.cursor()
-            cursor.execute("""INSERT INTO sisticket.registro_sisticket
+            cursor.execute("""INSERT INTO sisreg.registro_sisticket
                                             (id, estado, usuario_nombre_insert ,fecha_inicio_evento, inframonitor, problema,fecha_carga,
                                             culpable,fecha_solucion,fecha_aviso_clientes,problema_genera,solucion)
                                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
@@ -135,7 +151,7 @@ class insertar_registro:
             connection = psycopg2.connect(
                 database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
             cursor = connection.cursor()
-            cursor.execute("""INSERT INTO sisticket.registro_sisticket
+            cursor.execute("""INSERT INTO sisreg.registro_sisticket
                                                 (id, estado,usuario_nombre_insert,usuario_id_insert,fecha_inicio_evento,inframonitor,problema,
                                                 fecha_carga,culpable,fecha_solucion,fecha_aviso_clientes,problema_genera,solucion)
                                                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
@@ -155,13 +171,13 @@ class consulta_host:
             cursor.execute("""SELECT id, nombre
                                     FROM(
                                     	(SELECT infra_id AS id, CONCAT(infra_id,' - ',infra_nombre) AS nombre, 'A' AS tipo
-                                    			from sisticket.infraestructura
+                                    			from sisreg.infraestructura
                                     			where activo = TRUE)
 
                                     	UNION
 
                                     	(SELECT monitor_id AS id, CONCAT( monitor_id ,' - ', hostname) AS nombre, 'Z' AS tipo
-                                    					FROM sisticket.db_monitor
+                                    					FROM sisreg.db_monitor
                                     					WHERE hostname is not null)
                                     ) AS foo
                                     ORDER BY tipo, id;""")
@@ -186,7 +202,7 @@ class clientMonitor:
             " WHERE es_ultima_config = 't' AND monitor_id <> '{}' AND ARRAY" + \
             str(monitors)
         _select += " && monitor_id) UNION SELECT distinct(c.cliente_id) as cliente_id, c.nombre, ie.infra_todocliente"\
-            " FROM public.cliente c, sisticket.infracliente i, sisticket.infraestructura ie"\
+            " FROM public.cliente c, sisreg.infracliente i, sisreg.infraestructura ie"\
             " WHERE c.cliente_id = i.cliente_id AND i.infra_id = ie.infra_id AND i.infra_id IN" + \
             str(newMon)
         try:
@@ -204,7 +220,7 @@ class clientMonitor:
             "SELECT nombre from public.monitor where monitor_id=") + str(id_monitor)
         if id_monitor > 90000:
             _select = str(
-                "SELECT infra_nombre from sisticket.infraestructura where infra_id=") + str(id_monitor)
+                "SELECT infra_nombre from sisreg.infraestructura where infra_id=") + str(id_monitor)
         try:
             cursor = conexion.conect_post()
             cursor.execute(_select)

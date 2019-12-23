@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+    <title>SEGUIMIENTO TICKET</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style media="screen">
+  .results tr[visible='false'],
+  .no-result{
+   display:none;
+}
+
+.results tr[visible='true']{
+display:table-row;
+}
+
+.counter{
+padding:8px;
+color:#de1b1b;
+}
+  </style>
+  {% extends "librerias.html" %}
+</head>
+
+<body>
+
+  {% block content %}
+  <!-- .......-CABECERA-....... -->
+  <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
+    <li><a class="navbar-brand" href="{{url_for('inicio')}}"><i class="fas fa-home" style="font-size:30px;color:rgb(236, 101, 14)"></i> SEGUIMIENTO TICKET</a></li>
+    <form action="/logout" method="POST">
+       <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
+       <a style="float:right" class="navbar-brand">{{usuario}}</a>
+       <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+       <a style="float:right" class="navbar-brand">{{compania}}</a>
+       <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+    </form><br>
+  </ul>
+
+  <!-- .......-CABECERA-....... -->
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+          {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                  <span>{{ message }}</span>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+          {% endfor %}
+      {% endif %}
+  {% endwith %}
+
+
+
+<div class="jumbotron jumbotron-fluid" style="padding-top: 14px ;padding-bottom: 5px;filter:alpha(opacity=50); opacity:0.9;">
+<div class="container">
+<form action="/consultar" method="POST">
+  <div class="form-row">
+    <div class="form-group col-md-2">
+
+    </div>
+
+    <div class="form-group col-md-3">
+      <label for="inputnombre">Selecciona Rango de Fecha: </label>
+      <div class="input-group date"  data-target-input="nearest">
+        <input type="text" name="fecha" value="{{ayer}}"/>
+      </div>
+      <script type="text/javascript">
+
+          $(function() {
+              $('input[name="fecha"]').daterangepicker({
+                opens: 'left',
+                maxDate: new Date(),
+                "locale": {
+                          "format": "DD/MM/YYYY",
+                          "separator": " - ",
+                          "applyLabel": "Aplicar",
+                          "cancelLabel": "Cancelar",
+                          "fromLabel": "De",
+                          "toLabel": "Até",
+                          "customRangeLabel": "Custom",
+                          "daysOfWeek": [
+                              "Dom",
+                              "Lun",
+                              "Mar",
+                              "Mie",
+                              "Jue",
+                              "Vie",
+                              "Sáb"
+                          ],
+                          "monthNames": [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Setiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                          ],
+                          "firstDay": 0
+                      }
+              }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+              });
+            });
+      </script>
+
+    </div>
+    <div class="form-group col-md-1"></div>
+    <div class="form-group col-md-3">
+      <br>
+      <button type="submit" class="btn btn-warning ">Consultar</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </form>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<div class="jumbotron jumbotron-fluid" style="padding-top: 14px ;padding-bottom: 5px; padding: 5px;">
+<div class="form-group pull-right" style="width:15%">
+   <input type="text" class="search form-control" placeholder="Buscar">
+</div>
+<span class="counter pull-right"></span>
+<br>
+
+<!-- <button id="exportButton" data-toggle="tooltip" title="Exportar Excel" class="btn btn-lg clearfix" style="background-color:rgb(23, 113, 11);color:#f0f0f0;float:right"> -->
+<!-- <span class="fas fa-file-excel" ></span> </button> -->
+<table id="example" class="table table-hover table-bordered results" style="width:100%; text-align: center;">
+  <thead style="background-color:rgb(236, 101, 14)">
+    <tr>
+
+      <th scope="col"><p style="color:#f0f0f0;">Estado</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Fecha_Inicio_Evento</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Fecha_Solucion</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">fecha_aviso_clientes</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Monitor_Hostname</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Clientes_Afectado</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Número_Clientes_Afectado</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Problema</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Problema_Generado</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Solucion</p></th>
+      <th scope="col"><p style="color:#f0f0f0;">Culpable</p></th>
+    </tr>
+
+  </thead>
+  {% for datos in data%}
+  <tbody>
+    <tr style="width:100%">
+      
+      {% if datos["status"] == True %}
+      <th><span class="far fa-check-circle text-success fa-2x"></span></th>
+      {%else%}
+      <th><span class="far fa-times-circle  text-danger fa-2x"></span></th>
+      {%endif%}
+      <td>{{datos["beginDate"]}}</td>
+      <td>{{datos["solutionDate"]}}</td>
+      <td>{{datos["fechAvisoCli"]}}</td>
+      <td>{{datos["monitor"] | truncate(30) }}</td>
+      {% if datos["clients"] == '' %}
+      <td>SIN CLIENTES</td>
+      {%else%}
+      <td><span  style="text-overflow: ellipsis;" alt="{{datos["clients"]}}" title="{{datos["clients"]}}">{{datos["clients"] | truncate(50)}}</span></td>
+      {%endif%}
+      <td>{{datos.qcliente}}</td>
+      <td><span  style="text-overflow: ellipsis;" alt="{{datos["problem"]}}" title="{{datos["problem"]}}">{{datos["problem"] | truncate(50)}}</span></td>
+      <td><span  style="text-overflow: ellipsis;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
+      <td>{{datos["solution"]}}</td>
+      <td>{{datos["culpable"]}}</td>
+
+    </tr>
+  </tbody>
+
+  {% endfor %}
+  <script type="text/javascript">
+  $(document).ready(function() {
+      $('#example').DataTable({
+        "scrollY": 500,
+        "scrollX": true,
+        "paging":   false,
+        "ordering": false,
+        "info":     false,
+        "searching": false,
+        "language": {
+          "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+        }
+      });
+    });
+  </script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  $(".search").keyup(function () {
+    var searchTerm = $(".search").val();
+    var listItem = $('.results tbody').children('tr');
+    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+  $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+        return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+    }
+  });
+
+  $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','false');
+  });
+
+  $(".results tbody tr:containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','true');
+  });
+
+  var jobCount = $('.results tbody tr[visible="true"]').length;
+    $('.counter').text(jobCount + ' Registros');
+
+  if(jobCount == '0') {$('.no-result').show();}
+    else {$('.no-result').hide();}
+		  });
+});
+
+</script>
+
+</table>
+
+</div>
+
+
+  {% endblock %}
+</body>

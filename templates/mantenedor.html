@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+    <title>SEGUIMIENTO TICKET</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style media="screen">
+  .results tr[visible='false'],
+  .no-result{
+   display:none;
+}
+
+.results tr[visible='true']{
+display:table-row;
+}
+
+.counter{
+padding:8px;
+color:#de1b1b;
+}
+  </style>
+  {% extends "librerias.html" %}
+</head>
+
+<body>
+
+  {% block content %}
+  <!-- .......-CABECERA-....... -->
+  <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
+    <li><a class="navbar-brand" href="{{url_for('inicio')}}"><i class="fas fa-home" style="font-size:30px;color:rgb(236, 101, 14)"></i> SEGUIMIENTO TICKET</a></li>
+    <form action="/logout" method="POST">
+       <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
+       <a style="float:right" class="navbar-brand">{{usuario}}</a>
+       <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+       <a style="float:right" class="navbar-brand">{{compania}}</a>
+       <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+    </form><br>
+  </ul>
+
+  <!-- .......-CABECERA-....... -->
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+          {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                  <span>{{ message }}</span>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+          {% endfor %}
+      {% endif %}
+  {% endwith %}
+
+
+
+
+<div class="jumbotron jumbotron-fluid" style="padding-top: 14px ;padding-bottom: 5px; padding: 5px;">
+<div class="form-group pull-right" style="width:15%">
+   <input type="text" class="search form-control" placeholder="Buscar">
+</div>
+<span class="counter pull-right"></span>
+<br>
+
+
+
+</div>
+
+
+  {% endblock %}
+</body>
