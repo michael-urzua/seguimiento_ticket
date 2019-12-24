@@ -42,6 +42,21 @@ class consulta_user_compania:
             return False
 
 
+class consulta_user:
+    @staticmethod
+    def select_user():
+        try:
+
+            cursor = conexion.conect_post()
+            cursor.execute("""SELECT cu.cliente_usuario_id,CONCAT(cu.nombre ,' - ', c.nombre) as nombre ,cu.activo_perfil
+                                FROM public.cliente_usuario cu inner join public.cliente c
+                                ON cu.cliente_id = c.cliente_id
+                                where cu.nombre is not null and cu.activo_perfil = 'si'  """)
+            return cursor
+        except:
+            return False
+
+
 class consulta_perfil:
     @staticmethod
     def select_perfil():
