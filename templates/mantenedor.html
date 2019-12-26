@@ -45,62 +45,123 @@
   <div class="container">
     <div class="jumbotron">
 
-      <form action="/insertar_perfil" method="POST">
-        <div class="form-group row">
-          <label for="inputpaso3" class="col-sm-3 col-form-label">Seleccione Usuario</label>
-          <div class="col-sm-6">
-            <select class="selectpicker form-control" data-live-search="true"  name="origen" id="origen" style="background-color: #fff5eb;">
-              {% for user_perfil in usuario_add %}
-              <option data-tokens="{{user_perfil.0}}">{{user_perfil.1}}</option>
-              {%endfor%}
-            </select>
-          </div>
+      <!-- Nav pills -->
+      <ul class="nav nav-pills" role="tablist" style="background-color: #ffc107;line-height: 43px;font-size: 19px;">
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="pill" href="#menu1" style="background-color: #ffc107;color: #060606;">Agregar Usuarios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="pill" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="pill" href="#menu2" style="background-color: #ffc107;color: #060606;">Administrar Usuarios</a>
+        </li>
+      </ul><br>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div id="menu1" class="container tab-pane" style="background-color: #ececec;"><br>
+
+          <form action="/insertar_perfil" method="POST">
+            <div class="form-group row">
+              <label for="inputpaso3" class="col-sm-3 col-form-label">Seleccione Usuario</label>
+              <div class="col-sm-6">
+                <select class="selectpicker form-control" data-live-search="true" name="origen" id="origen" style="background-color: #fff5eb;">
+                  {% for user_perfil in usuario_add %}
+                  <option data-tokens="{{user_perfil.0}}">{{user_perfil.1}}</option>
+                  {%endfor%}
+                </select>
+              </div>
+            </div>
+
+
+
+            <div class="form-group row" style="width:135%;">
+              <label for="inputpaso3" class="col-sm-3 col-form-label"></label>
+              <div class="col-sm-3">
+                <input type="button" class="pasar izq form-control btn btn-warning" value="Pasar »"><br><br>
+                <input type="button" class="pasar_dere der form-control btn btn-warning" value="« Quitar">
+              </div>
+            </div>
+
+
+            <div class="form-group row">
+              <label for="inputpaso3" class="col-sm-3 col-form-label"></label>
+              <div class="col-sm-6">
+                <select name="usr_perfil" id="usr_perfil" multiple="multiple" size="8" class="form-control" style="background-color: #fff5eb;">
+
+                </select>
+              </div>
+            </div>
+
+            <script type="text/javascript">
+              $().ready(function() {
+                $('.pasar').click(function() {
+                  return !$('#origen option:selected').remove().appendTo('#usr_perfil');
+                });
+                $('.pasar_dere').click(function() {
+                  return !$('#usr_perfil option:selected').remove().appendTo('#origen');
+                });
+              });
+            </script>
+
+            <div class="form-group row">
+              <div class="col-sm-5"></div>
+              <div class="col-sm-2">
+                <button type="submit" class="btn btn-success">Guardar</button>
+              </div>
+              <div class="col-sm-5"></div>
+            </div>
+          </form>
         </div>
 
 
+        <div id="menu2" class="container tab-pane fade" style="background-color: #ececec;"><br>
+          <table id="" class="table table-hover">
+            <thead style="background-color:rgb(236, 101, 14)">
+              <tr>
+                <th>Accion</th>
+                <th>Perfil</th>
+                <th>Activo</th>
+                <th>Nombre Usuario</th>
+                <th>Cliente</th>
+              </tr>
+            </thead>
+            {% for show_usr in mostrar_user%}
+            <tbody>
+              <tr style="width:100%">
+                <td>
+                  <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#">
+                    <span class="far fa-edit x" data-toggle="tooltip" title="Modificar"></span>
+                  </a>
+                </td>
 
-        <div class="form-group row" style="width:135%;">
-          <label for="inputpaso3" class="col-sm-3 col-form-label"></label>
-          <div class="col-sm-3">
-            <input type="button" class="pasar izq form-control btn btn-warning" value="Pasar »"><br><br>
-            <input type="button" class="pasar_dere der form-control btn btn-warning" value="« Quitar">
-          </div>
+                <td>{{show_usr.0}}</td>
+
+                {% if show_usr.1== 'si' %}
+                <th><span class="far fa-check-circle text-success fa-2x"></span></th>
+                {%else%}
+                <th><span class="far fa-times-circle  text-danger fa-2x"></span></th>
+                {%endif%}
+
+                <td>{{show_usr.2}}</td>
+                <td>{{show_usr.3}}</td>
+
+
+              </tr>
+            </tbody>
+          </table>
+
+          {% endfor %}
+
+
+
+
         </div>
-
-
-        <div class="form-group row">
-          <label for="inputpaso3" class="col-sm-3 col-form-label"></label>
-          <div class="col-sm-6">
-            <select name="usr_perfil" id="usr_perfil" multiple="multiple" size="8" class="form-control" style="background-color: #fff5eb;">
-
-            </select>
-          </div>
-        </div>
-
-        <script type="text/javascript">
-          $().ready(function() {
-            $('.pasar').click(function() {
-              return !$('#origen option:selected').remove().appendTo('#usr_perfil');
-            });
-            $('.pasar_dere').click(function() {
-              return !$('#usr_perfil option:selected').remove().appendTo('#origen');
-            });
-          });
-        </script>
-
-        <div class="form-group row">
-          <div class="col-sm-5"></div>
-          <div class="col-sm-2">
-            <button type="submit" class="btn btn-success">Guardar</button>
-          </div>
-          <div class="col-sm-5"></div>
-        </div>
-      </form>
+      </div>
 
     </div>
   </div>
-
-
 
   {% endblock %}
 </body>

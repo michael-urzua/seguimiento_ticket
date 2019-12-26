@@ -244,3 +244,15 @@ class clientMonitor:
         except:
             flash("NO SE PUEDE REALIZAR LA BUSQUEDA DE REGISTRO", "danger")
         return ''
+
+class consulta_user_perfiles:
+    @staticmethod
+    def select_user_perfil():
+        try:
+            cursor = conexion.conect_post()
+            cursor.execute("""SELECT a2.nombre_perfil, activo, a1.nombre_usuario, a1.cliente
+                              FROM sisreg.perfil_usuario  a1 inner join sisreg.perfil a2
+                              ON a1.perfil_id = a2.perfil_id""")
+            return cursor
+        except:
+         return False

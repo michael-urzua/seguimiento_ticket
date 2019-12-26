@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, s
 from datetime import datetime, date, time, timedelta
 import requests
 from config import conexion_sqlite
-from data import consulta_busqueda, consulta_user_compania, actualiza_registro, consulta_inicial, consulta_host, insertar_registro,clientMonitor,consulta_perfil,consulta_user
+from data import consulta_busqueda, consulta_user_compania, actualiza_registro, consulta_inicial, consulta_host, insertar_registro,clientMonitor,consulta_perfil,consulta_user,consulta_user_perfiles
 from utils.get_token import get
 from utils.globals import url2, url_chek
 import sys
@@ -391,7 +391,13 @@ def mantenedor():
 
         cursor_user = consulta_user.select_user()
         user_add = cursor_user.fetchall()
-        return render_template("mantenedor.html", usuario = nombre , compania = cliente, usuario_add = user_add)
+
+        cursor_user_perfil = consulta_user_perfiles.select_user_perfil()
+        user_show = cursor_user_perfil.fetchall()
+
+
+
+        return render_template("mantenedor.html", usuario = nombre , compania = cliente, usuario_add = user_add, mostrar_user = user_show)
 
 
 @app.route("/insertar_perfil", methods=['POST'])
@@ -405,6 +411,7 @@ def insertar_perfil():
     usr_perfil = request.form.getlist('usr_perfil')
     print("usr_perfilllllllllll" , usr_perfil)
     return redirect(url_for('mantenedor'))
+
 
 
 if(__name__ == "__main__"):
