@@ -250,9 +250,42 @@ class consulta_user_perfiles:
     def select_user_perfil():
         try:
             cursor = conexion.conect_post()
-            cursor.execute("""SELECT a2.nombre_perfil, activo, a1.nombre_usuario, a1.cliente
+            cursor.execute("""SELECT a2.nombre_perfil, a1.activo, a1.nombre_usuario, a1.cliente,a1.id_perfil_usuario
                               FROM sisreg.perfil_usuario  a1 inner join sisreg.perfil a2
                               ON a1.perfil_id = a2.perfil_id""")
             return cursor
         except:
          return False
+
+
+class actualiza_perfil:
+    @staticmethod
+    def update_perfil(id_perfil_usuario,nombre_perfil,activo):
+        try:
+
+            local = session['option']
+            if local == 'local':
+
+                connection = psycopg2.connect(
+                    database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
+                cursor = connection.cursor()
+                cursor.execute(""" UPDATE sisreg.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =  %s """,
+                               (nombre_perfil, activo, id_perfil_usuario))
+
+                connection.commit()
+                flash("DATOS ACTUALIZADOS EXITOSAMENTE", "success")
+
+            else:
+
+                connection = psycopg2.connect(
+                    database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
+                cursor = connection.cursor()
+                cursor.execute(""" UPDATE sisreg.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =  %s """,
+                               (nombre_perfil, activo, id_perfil_usuario))
+
+                connection.commit()
+                flash("DATOS ACTUALIZADOS EXITOSAMENTE", "success")
+
+        except:
+            flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
+            return cursor

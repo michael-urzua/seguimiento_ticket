@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, s
 from datetime import datetime, date, time, timedelta
 import requests
 from config import conexion_sqlite
-from data import consulta_busqueda, consulta_user_compania, actualiza_registro, consulta_inicial, consulta_host, insertar_registro,clientMonitor,consulta_perfil,consulta_user,consulta_user_perfiles
+from data import consulta_busqueda, consulta_user_compania, actualiza_registro, consulta_inicial, consulta_host, insertar_registro, clientMonitor, consulta_perfil, consulta_user, consulta_user_perfiles,actualiza_perfil
 from utils.get_token import get
 from utils.globals import url2, url_chek
 import sys
@@ -92,19 +92,16 @@ def inicio():
     cursor = consulta_inicial.select_inicio()
     if cursor == False:
 
-        flash("No hay conexion a la BD","danger")
+        flash("No hay conexion a la BD", "danger")
         return redirect(url_for('index'))
-
 
     cursor_host = consulta_host.select_consultar_host()
     host_name = cursor_host.fetchall()
 
-    #PERFIL
+    # PERFIL
     cursor_perfil = consulta_perfil.select_perfil()
     perfil_name = cursor_perfil.fetchall()
-
-
-    print(perfil_name)
+    session["perfil_nombre"] = perfil_name
 
     local = session['option']
     if local == 'local':
@@ -194,15 +191,15 @@ def inicio():
             dictData["id"] = datas[9]
             newList.append(dictData)
 
-        if perfil_name[0][0] == 'administrador' and perfil_name[0][1] == 'si' :
-            return render_template("template.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
-        elif perfil_name[0][0] == 'lectura' and perfil_name[0][1] == 'si' :
+        if session["perfil_nombre"][0][0] == 'administrador' and session["perfil_nombre"][0][1] == 'si':
+            return render_template("template_admin.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+        elif session["perfil_nombre"][0][0] == 'lectura' and session["perfil_nombre"][0][1] == 'si':
             return render_template("template_noEdit.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
-        elif perfil_name[0][1] == 'no' :
-            flash("NO TIENE PERFIL ACTIVO","danger")
+        elif session["perfil_nombre"][0][0] == 'escritura' and session["perfil_nombre"][0][1] == 'si':
+            return render_template("template.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+        elif session["perfil_nombre"][0][1] == 'no':
+            flash("NO TIENE PERFIL ACTIVO", "danger")
             return redirect(url_for('index'))
-
-
 
 
 @app.route("/consultar", methods=["GET", "POST"])
@@ -291,7 +288,6 @@ def consultar():
             clientList = map(lambda x: x["nombre_cliente"], clientList)
             clientList = str(clientList)[1:-1]
 
-
             if len(clientsDown) != 0:
                 clientList = 'Todos'
             dictData = {}
@@ -308,8 +304,16 @@ def consultar():
             dictData["culpable"] = datas[8]
             dictData["id"] = datas[9]
             newList.append(dictData)
-        return render_template("template.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
 
+        if session["perfil_nombre"][0][0] == 'administrador':
+            return render_template("template_admin.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
+        elif session["perfil_nombre"][0][0] == 'lectura':
+            return render_template("template_noEdit.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
+        elif session["perfil_nombre"][0][0] == 'escritura':
+            return render_template("template.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
+
+
+        # return render_template("template.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
 
 
 @app.route("/actualizar", methods=['POST'])
@@ -329,7 +333,8 @@ def actualizar():
     culpable = request.form['culpable']
     estado = request.form['estado']
 
-    cursor = actualiza_registro.update_registro(id,fecha_solucion,fecha_aviso_clientes,problema,problema_genera,solucion,culpable,estado )
+    cursor = actualiza_registro.update_registro(
+        id, fecha_solucion, fecha_aviso_clientes, problema, problema_genera, solucion, culpable, estado)
 
     return redirect(url_for('inicio'))
 
@@ -365,39 +370,36 @@ def insertar():
     return redirect(url_for('inicio'))
 
 
-
-@app.route("/mantenedor",methods=["GET","POST"])
+@app.route("/mantenedor", methods=["GET", "POST"])
 def mantenedor():
 
-	if len(session) == 0:
-		return redirect(url_for('index'))
+    if len(session) == 0:
+        return redirect(url_for('index'))
 
-	variable = session_token(session)
-	if variable == 'False':
-		return render_template("login.html")
+    variable = session_token(session)
+    if variable == 'False':
+        return render_template("login.html")
 
-	local = session['option']
-	if local == 'local':
-		cursor4= conexion_sqlite.conect_sql()
-		respuesta = cursor4.fetchall()
-		nombre = respuesta[0][0]
-		cliente = respuesta[0][2]
-		return render_template("mantenedor.html", usuario = nombre , compania = cliente)
-	else:
-		cursor3=consulta_user_compania.select_user_compania()
-		cliente_usuario = cursor3.fetchall()
-		nombre = cliente_usuario[0][0]
-		cliente = cliente_usuario[0][1]
+    local = session['option']
+    if local == 'local':
+        cursor4 = conexion_sqlite.conect_sql()
+        respuesta = cursor4.fetchall()
+        nombre = respuesta[0][0]
+        cliente = respuesta[0][2]
+        return render_template("mantenedor.html", usuario=nombre, compania=cliente)
+    else:
+        cursor3 = consulta_user_compania.select_user_compania()
+        cliente_usuario = cursor3.fetchall()
+        nombre = cliente_usuario[0][0]
+        cliente = cliente_usuario[0][1]
 
-        cursor_user = consulta_user.select_user()
-        user_add = cursor_user.fetchall()
+    cursor_user = consulta_user.select_user()
+    user_add = cursor_user.fetchall()
 
-        cursor_user_perfil = consulta_user_perfiles.select_user_perfil()
-        user_show = cursor_user_perfil.fetchall()
+    cursor_user_perfil = consulta_user_perfiles.select_user_perfil()
+    user_show = cursor_user_perfil.fetchall()
 
-
-
-        return render_template("mantenedor.html", usuario = nombre , compania = cliente, usuario_add = user_add, mostrar_user = user_show)
+    return render_template("mantenedor.html", usuario=nombre, compania=cliente, usuario_add=user_add, mostrar_user=user_show)
 
 
 @app.route("/insertar_perfil", methods=['POST'])
@@ -407,11 +409,25 @@ def insertar_perfil():
     if variable == 'False':
         return render_template("login.html")
 
-
     usr_perfil = request.form.getlist('usr_perfil')
-    print("usr_perfilllllllllll" , usr_perfil)
+    print("usr_perfilllllllllll", usr_perfil)
     return redirect(url_for('mantenedor'))
 
+
+@app.route("/actualizar_perfil", methods=['POST'])
+def actualizar_perfil():
+
+    variable = session_token(session)
+    if variable == 'False':
+        return render_template("login.html")
+
+    id_perfil_usuario = request.form['id_perfil_usuario']
+    nombre_perfil = request.form['nombre_perfil']
+    activo = request.form['activo']
+
+    cursor = actualiza_perfil.update_perfil(id_perfil_usuario,nombre_perfil,activo)
+
+    return redirect(url_for('inicio'))
 
 
 if(__name__ == "__main__"):
