@@ -46,12 +46,11 @@ class consulta_user:
     @staticmethod
     def select_user():
         try:
-
             cursor = conexion.conect_post()
-            cursor.execute("""SELECT cu.cliente_usuario_id,CONCAT(cu.nombre ,' - ', c.nombre) as nombre ,cu.activo_perfil
+            cursor.execute("""SELECT distinct concat(cu.cliente_usuario_id,' - ',cu.nombre) ,cu.activo_perfil,c.nombre
                                 FROM public.cliente_usuario cu inner join public.cliente c
                                 ON cu.cliente_id = c.cliente_id
-                                where cu.nombre is not null and cu.activo_perfil = 'si'  """)
+                                where cu.nombre is not null and cu.activo_perfil = 'si' and c.nombre = 'Atentus'  """)
             return cursor
         except:
             return False
@@ -61,15 +60,16 @@ class consulta_perfil:
     @staticmethod
     def select_perfil():
         try:
-            # usuario = session['cliente_usuario_id']
+            usuario = session['cliente_usuario_id']
             cursor = conexion.conect_post()
 
             cursor.execute("""SELECT a1.nombre_perfil, b2.activo
                                   FROM sisreg.perfil a1 inner join sisreg.perfil_usuario b2
                                   ON a1.perfil_id = b2.perfil_id
-                                  where b2.cliente_usuario_id = '9461'""")
+                                  where b2.cliente_usuario_id = '%s'""", (usuario,))
             return cursor
         except:
+         print('aaaaa')
          return False
 
 
@@ -250,7 +250,7 @@ class consulta_user_perfiles:
     def select_user_perfil():
         try:
             cursor = conexion.conect_post()
-            cursor.execute("""SELECT a2.nombre_perfil, a1.activo, a1.nombre_usuario, a1.cliente,a1.id_perfil_usuario
+            cursor.execute("""SELECT a2.nombre_perfil, a1.activo, a1.nombre_usuario,a1.id_perfil_usuario
                               FROM sisreg.perfil_usuario  a1 inner join sisreg.perfil a2
                               ON a1.perfil_id = a2.perfil_id""")
             return cursor
@@ -260,7 +260,7 @@ class consulta_user_perfiles:
 
 class actualiza_perfil:
     @staticmethod
-    def update_perfil(id_perfil_usuario,nombre_perfil,activo):
+    def update_perfil(nombre_perfil,activo,id_perfil_usuario):
         try:
 
             local = session['option']
@@ -269,7 +269,7 @@ class actualiza_perfil:
                 connection = psycopg2.connect(
                     database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
                 cursor = connection.cursor()
-                cursor.execute(""" UPDATE sisreg.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =  %s """,
+                cursor.execute(""" UPDATE sisreg.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
                                (nombre_perfil, activo, id_perfil_usuario))
 
                 connection.commit()
@@ -280,7 +280,7 @@ class actualiza_perfil:
                 connection = psycopg2.connect(
                     database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
                 cursor = connection.cursor()
-                cursor.execute(""" UPDATE sisreg.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =  %s """,
+                cursor.execute(""" UPDATE sisreg.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
                                (nombre_perfil, activo, id_perfil_usuario))
 
                 connection.commit()
@@ -289,3 +289,41 @@ class actualiza_perfil:
         except:
             flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
             return cursor
+
+class insertar_registro_perfil:
+    @staticmethod
+    def insert_perfil(list):
+
+        cursor = conexion.conect_post()
+
+
+
+        local = session['option']
+        if local == 'local':
+
+            connection = psycopg2.connect(
+                database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
+            cursor = connection.cursor()
+            cursor.execute("""INSERT INTO sisreg.perfil_usuario(id_perfil_usuario, cliente_usuario_id, perfil_id, activo, nombre_usuario)
+                                        VALUES (%s,%s,'2','si',%s)""", (id_datos,id_usuario_perfil,nombre_usuario_perfil))
+            connection.commit()
+            flash("DATOS INGRESADOS CON EXITO", "success")
+            return cursor
+
+        else:
+
+            connection = psycopg2.connect(
+                database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
+            cursor = connection.cursor()
+            for data in list:
+                cursor.execute(
+                    "SELECT MAX( id_perfil_usuario ) + 1 FROM sisreg.perfil_usuario")
+                id_datos = cursor.fetchone()
+                print id_datos
+                cursor.execute("""INSERT INTO sisreg.perfil_usuario(id_perfil_usuario, cliente_usuario_id, perfil_id, activo, nombre_usuario)
+                                        VALUES (%s,%s,'2','si',%s)""", (id_datos,data["id_usuario_perfil"],data["nombre_usuario_perfil"]))
+
+
+                connection.commit()
+                flash("DATOS INGRESADOS CON EXITO", "success")
+            return 'kjyhkj'

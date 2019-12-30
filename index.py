@@ -4,7 +4,9 @@ from flask import Flask, render_template, request, session, redirect, url_for, s
 from datetime import datetime, date, time, timedelta
 import requests
 from config import conexion_sqlite
-from data import consulta_busqueda, consulta_user_compania, actualiza_registro, consulta_inicial, consulta_host, insertar_registro, clientMonitor, consulta_perfil, consulta_user, consulta_user_perfiles,actualiza_perfil
+from data import consulta_busqueda, consulta_user_compania, actualiza_registro,\
+ consulta_inicial, consulta_host, insertar_registro, clientMonitor, consulta_perfil,  \
+ consulta_user, consulta_user_perfiles,actualiza_perfil,insertar_registro_perfil
 from utils.get_token import get
 from utils.globals import url2, url_chek
 import sys
@@ -410,24 +412,33 @@ def insertar_perfil():
         return render_template("login.html")
 
     usr_perfil = request.form.getlist('usr_perfil')
-    print("usr_perfilllllllllll", usr_perfil)
+    listUsr=[]
+    for elem in usr_perfil:
+        dictUsr={}
+        dictUsr["id_usuario_perfil"] = (str(elem).split("-")[0])
+        dictUsr["nombre_usuario_perfil"] = (str(elem).split("-")[1])
+        listUsr.append(dictUsr)
+
+    cursor = insertar_registro_perfil.insert_perfil(listUsr)
+
     return redirect(url_for('mantenedor'))
 
 
 @app.route("/actualizar_perfil", methods=['POST'])
 def actualizar_perfil():
 
+
     variable = session_token(session)
     if variable == 'False':
         return render_template("login.html")
 
-    id_perfil_usuario = request.form['id_perfil_usuario']
     nombre_perfil = request.form['nombre_perfil']
     activo = request.form['activo']
+    id_perfil_usuario = request.form['id_perfil_usuario']
 
-    cursor = actualiza_perfil.update_perfil(id_perfil_usuario,nombre_perfil,activo)
+    cursor = actualiza_perfil.update_perfil(nombre_perfil,activo,id_perfil_usuario)
 
-    return redirect(url_for('inicio'))
+    return redirect(url_for('mantenedor'))
 
 
 if(__name__ == "__main__"):
