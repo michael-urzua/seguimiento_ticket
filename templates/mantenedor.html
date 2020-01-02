@@ -105,6 +105,30 @@
               });
             </script>
 
+
+            <div class="form-group row">
+              <label for="inputpaso3" class="col-sm-3 col-form-label">Seleccione Perfil</label>
+              <div class="col-sm-6">
+                <select class="form-control" data-live-search="true" name="perfil_usr_add"  style="background-color: #fff5eb;">
+                  <option value="1">Administrador</option>
+                  <option value="2">Lectura</option>
+                  <option value="3">Escritura</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="inputpaso3" class="col-sm-3 col-form-label">Activo</label>
+              <div class="col-sm-6">
+                <select class="form-control" data-live-search="true" name="activo_usr_add"  style="background-color: #fff5eb;">
+                  <option value="si">Si</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+            </div>
+
+
+
             <div class="form-group row">
               <div class="col-sm-5"></div>
               <div class="col-sm-2">
@@ -199,9 +223,9 @@
                             </div>
 
 
-                          <br><br>
+                            <br><br>
 
-                            <input type="hidden" class="form-control" name="id_perfil_usuario"  value="{{show_usr.3}}">
+                            <input type="hidden" class="form-control" name="id_perfil_usuario" value="{{show_usr.3}}">
 
                             <div class="form-group row">
                               <div class="col-sm-5"></div>
@@ -236,19 +260,18 @@
 
 
           <script type="text/javascript">
+            $(document).ready(function() {
+              $('#examplq').DataTable({
+                "info": false,
+                "searching": false,
+                "paging": false,
+                "ordering": false,
+                "language": {
+                  "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+                }
+              });
 
-        $(document).ready(function() {
-            $('#examplq').DataTable({
-              "info": false,
-              "searching": false,
-              "paging": false,
-              "ordering": false,
-              "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
-              }
             });
-
-        } );
           </script>
 
 

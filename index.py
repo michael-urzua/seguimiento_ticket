@@ -6,7 +6,8 @@ import requests
 from config import conexion_sqlite
 from data import consulta_busqueda, consulta_user_compania, actualiza_registro,\
  consulta_inicial, consulta_host, insertar_registro, clientMonitor, consulta_perfil,  \
- consulta_user, consulta_user_perfiles,actualiza_perfil,insertar_registro_perfil
+ consulta_user, consulta_user_perfiles,actualiza_perfil,insertar_registro_perfil,actualizar_public_cliente
+
 from utils.get_token import get
 from utils.globals import url2, url_chek
 import sys
@@ -419,7 +420,12 @@ def insertar_perfil():
         dictUsr["nombre_usuario_perfil"] = (str(elem).split("-")[1])
         listUsr.append(dictUsr)
 
-    cursor = insertar_registro_perfil.insert_perfil(listUsr)
+    perfil_usr_add = request.form['perfil_usr_add']
+    activo_usr_add = request.form['activo_usr_add']
+
+    cursor = insertar_registro_perfil.insert_perfil(listUsr,perfil_usr_add,activo_usr_add)
+    if cursor != False:
+        cursor2 = actualizar_public_cliente.update_public_cliente(listUsr)
 
     return redirect(url_for('mantenedor'))
 

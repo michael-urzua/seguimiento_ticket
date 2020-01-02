@@ -292,11 +292,9 @@ class actualiza_perfil:
 
 class insertar_registro_perfil:
     @staticmethod
-    def insert_perfil(list):
+    def insert_perfil(list,perfil_usr_add,activo_usr_add):
 
         cursor = conexion.conect_post()
-
-
 
         local = session['option']
         if local == 'local':
@@ -319,11 +317,28 @@ class insertar_registro_perfil:
                 cursor.execute(
                     "SELECT MAX( id_perfil_usuario ) + 1 FROM sisreg.perfil_usuario")
                 id_datos = cursor.fetchone()
-                print id_datos
                 cursor.execute("""INSERT INTO sisreg.perfil_usuario(id_perfil_usuario, cliente_usuario_id, perfil_id, activo, nombre_usuario)
-                                        VALUES (%s,%s,'2','si',%s)""", (id_datos,data["id_usuario_perfil"],data["nombre_usuario_perfil"]))
-
-
+                                        VALUES (%s,%s,%s,%s,%s)""",
+                                        (id_datos,data["id_usuario_perfil"],perfil_usr_add,activo_usr_add,data["nombre_usuario_perfil"]))
                 connection.commit()
                 flash("DATOS INGRESADOS CON EXITO", "success")
-            return 'kjyhkj'
+            return cursor
+
+
+class actualizar_public_cliente:
+    @staticmethod
+    def update_public_cliente(list):
+        try:
+            connection = psycopg2.connect(
+                database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
+            cursor = connection.cursor()
+            for data in list:
+
+                cursor.execute(""" UPDATE public.cliente_usuario SET  activo_perfil = 'no' WHERE cliente_usuario_id = %s """,
+                               (data["id_usuario_perfil"],))
+                connection.commit()
+
+                print('aaaaa', data["id_usuario_perfil"])
+        except:
+            flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
+            return cursor
