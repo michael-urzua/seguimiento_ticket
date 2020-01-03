@@ -12,13 +12,3 @@ class conexion:
          return cursor
       except:
        return False
-
-class conexion_sqlite:
-   @staticmethod
-   def conect_sql():
-      try:
-         conexion_sqlite=sqlite3.connect("sqlite.db",check_same_thread=False)
-         cursor=conexion_sqlite.execute("SELECT nombre,clave,cliente FROM usuario_sbif")
-         return cursor
-      except:
-       return False

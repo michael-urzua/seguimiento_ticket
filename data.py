@@ -1,4 +1,4 @@
-from config import conexion, conexion_sqlite
+from config import conexion
 from flask import Flask, session
 from datetime import datetime, date, time, timedelta
 import psycopg2
@@ -127,7 +127,7 @@ class insertar_registro:
 
         # FECHA ACTUAL
         fecha_creacion = datetime.now()
-        
+
         usuario = session["usr_api"][0][0]
         usuario_id = session['cliente_usuario_id']
         connection = psycopg2.connect(

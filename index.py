@@ -3,7 +3,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for, send_file, flash
 from datetime import datetime, date, time, timedelta
 import requests
-from config import conexion_sqlite
 from data import consulta_busqueda, consulta_user_compania, actualiza_registro,\
  consulta_inicial, consulta_host, insertar_registro, clientMonitor, consulta_perfil,  \
  consulta_user, consulta_user_perfiles,actualiza_perfil,insertar_registro_perfil,actualizar_public_cliente
