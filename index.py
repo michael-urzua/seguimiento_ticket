@@ -32,12 +32,12 @@ def logout():
 
 
 def session_token(var_session):
-    if var_session["option"] == 'api':
+    try:
         validar_session = requests.get(
             url_chek + url2 + var_session['token'], allow_redirects=False, verify=False).content
         return validar_session
-    else:
-        return 'True'
+    except:
+     return 'True'
 
 
 @app.route('/acceso', methods=["GET", "POST"])
@@ -45,41 +45,27 @@ def acceso():
 
     usuario = request.form['email']
     clave = request.form['password']
-    option = request.form['opcion_radiobtn']
 
-    if option == 'local':
-        session["option"] = 'local'
-        cursor = conexion_sqlite.conect_sql()
-        respuesta = cursor.fetchall()
 
-        if respuesta[0][0] == usuario and respuesta[0][1] == clave:
-            return redirect(url_for('inicio'))
+    r = get.get_api(usuario, clave)
+    if r == False:
+        flash("Problemas en la conexion API ")
+        return redirect(url_for('index'))
 
-        else:
-            flash("Usuario y/o Clave son invalidos", "danger")
-            return redirect(url_for('index'))
+    status = r["status"]
+    # VARIABLES SESSION -.---------)
+    if status == 0:
 
-    elif option == 'api':
+        token = r["data"]["token"]
+        cliente_usuario_id = r["data"]["cliente_usuario_id"]
 
-        r = get.get_api(usuario, clave)
-        if r == False:
-            flash("Problemas en la conexion API ")
-            return redirect(url_for('index'))
-
-        status = r["status"]
-        # VARIABLES SESSION -.---------)
-        if status == 0:
-            session["option"] = 'api'
-            token = r["data"]["token"]
-            cliente_usuario_id = r["data"]["cliente_usuario_id"]
-
-            # VARIABLES SESSION -.---------
-            session['cliente_usuario_id'] = cliente_usuario_id
-            session['token'] = token
-            return redirect(url_for('inicio'))
-        else:
-            flash("Usuario y/o Clave son invalidos", "danger")
-            return redirect(url_for('index'))
+        # VARIABLES SESSION -.---------
+        session['cliente_usuario_id'] = cliente_usuario_id
+        session['token'] = token
+        return redirect(url_for('inicio'))
+    else:
+        flash("Usuario y/o Clave son invalidos", "danger")
+        return redirect(url_for('index'))
 
 
 @app.route('/inicio')
@@ -106,103 +92,58 @@ def inicio():
     perfil_name = cursor_perfil.fetchall()
     session["perfil_nombre"] = perfil_name
 
-    local = session['option']
-    if local == 'local':
-        cursor_sqlite = conexion_sqlite.conect_sql()
-        respuesta = cursor_sqlite.fetchall()
-        session["usr_local"] = (respuesta)
-        usuario = session["usr_local"][0][0]
-        cliente = session["usr_local"][0][2]
+    cursor1 = consulta_user_compania.select_user_compania()
+    cliente_usuario = cursor1.fetchall()
+    session["usr_api"] = (cliente_usuario)
+    usuario = session["usr_api"][0][0]
+    cliente = session["usr_api"][0][1]
 
-        newList = []
-        for datas in cursor:
-            newMonitor = '('
-            for monitor in datas[3]:
-                nameMonitor = clientMonitor.dataMonitor(monitor)[0][0]
-                newMonitor += str(monitor) + '-' + str(nameMonitor) + ","
-            newMonitor = newMonitor[:-1]
-            newMonitor += ')'
-            _query = clientMonitor.selectClientMonitor(datas[3])
-            clientList = []
-            for dato in _query:
-                clientList.append(
-                    {"objetivo": dato[0], "nombre_cliente": dato[1], "estado": dato[2]})
+    newList = []
+    for datas in cursor:
+        newMonitor = '('
+        for monitor in datas[3]:
+            nameMonitor = clientMonitor.dataMonitor(monitor)[0][0]
+            newMonitor += str(monitor) + '-' + str(nameMonitor) + ","
+        newMonitor = newMonitor[:-1]
+        newMonitor += ')'
+        _query = clientMonitor.selectClientMonitor(datas[3])
 
-            clientsDown = [x for x in clientList if x["estado"] == True]
-            clientList = map(lambda x: x["nombre_cliente"], clientList)
-            clientList = str(clientList)[1:-1]
+        clientList = []
+        for dato in _query:
+            clientList.append(
+                {"objetivo": dato[0], "nombre_cliente": dato[1], "estado": dato[2]})
 
-            if len(clientsDown) != 0:
-                clientList = 'Todos'
-            dictData = {}
-            dictData["status"] = datas[0]
-            dictData["beginDate"] = datas[1]
-            dictData["solutionDate"] = datas[2]
-            dictData["fechAvisoCli"] = datas[4]
-            dictData["monitor"] = newMonitor
-            dictData["clients"] = clientList
-            dictData['qcliente'] = len(str(clientList).split(','))
-            dictData["problem"] = datas[5]
-            dictData["generateProblem"] = datas[6]
-            dictData["solution"] = datas[7]
-            dictData["culpable"] = datas[8]
-            dictData["id"] = datas[9]
-            newList.append(dictData)
+        clientsDown = [x for x in clientList if x["estado"] == True]
+        clientList = map(lambda x: x["nombre_cliente"], clientList)
+        clientList = str(clientList)[1:-1]
 
+        if len(clientsDown) != 0:
+            clientList = 'Todos'
+        dictData = {}
+        dictData["status"] = datas[0]
+        dictData["beginDate"] = datas[1]
+        dictData["solutionDate"] = datas[2]
+        dictData["fechAvisoCli"] = datas[4]
+        dictData["monitor"] = newMonitor
+        dictData["clients"] = clientList
+        dictData['qcliente'] = len(str(clientList).split(','))
+        dictData["problem"] = datas[5]
+        dictData["generateProblem"] = datas[6]
+        dictData["solution"] = datas[7]
+        dictData["culpable"] = datas[8]
+        dictData["id"] = datas[9]
+        newList.append(dictData)
+
+    if session["perfil_nombre"][0][0] == 'administrador' and session["perfil_nombre"][0][1] == 'si':
+        return render_template("template_admin.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+    elif session["perfil_nombre"][0][0] == 'lectura' and session["perfil_nombre"][0][1] == 'si':
+        return render_template("template_noEdit.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+    elif session["perfil_nombre"][0][0] == 'escritura' and session["perfil_nombre"][0][1] == 'si':
         return render_template("template.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+    elif session["perfil_nombre"][0][1] == 'no':
+        flash("NO TIENE PERFIL ACTIVO", "danger")
+        return redirect(url_for('index'))
 
-    else:
-        cursor1 = consulta_user_compania.select_user_compania()
-        cliente_usuario = cursor1.fetchall()
-        session["usr_api"] = (cliente_usuario)
-        usuario = session["usr_api"][0][0]
-        cliente = session["usr_api"][0][1]
-
-        newList = []
-        for datas in cursor:
-            newMonitor = '('
-            for monitor in datas[3]:
-                nameMonitor = clientMonitor.dataMonitor(monitor)[0][0]
-                newMonitor += str(monitor) + '-' + str(nameMonitor) + ","
-            newMonitor = newMonitor[:-1]
-            newMonitor += ')'
-            _query = clientMonitor.selectClientMonitor(datas[3])
-
-            clientList = []
-            for dato in _query:
-                clientList.append(
-                    {"objetivo": dato[0], "nombre_cliente": dato[1], "estado": dato[2]})
-
-            clientsDown = [x for x in clientList if x["estado"] == True]
-            clientList = map(lambda x: x["nombre_cliente"], clientList)
-            clientList = str(clientList)[1:-1]
-
-            if len(clientsDown) != 0:
-                clientList = 'Todos'
-            dictData = {}
-            dictData["status"] = datas[0]
-            dictData["beginDate"] = datas[1]
-            dictData["solutionDate"] = datas[2]
-            dictData["fechAvisoCli"] = datas[4]
-            dictData["monitor"] = newMonitor
-            dictData["clients"] = clientList
-            dictData['qcliente'] = len(str(clientList).split(','))
-            dictData["problem"] = datas[5]
-            dictData["generateProblem"] = datas[6]
-            dictData["solution"] = datas[7]
-            dictData["culpable"] = datas[8]
-            dictData["id"] = datas[9]
-            newList.append(dictData)
-
-        if session["perfil_nombre"][0][0] == 'administrador' and session["perfil_nombre"][0][1] == 'si':
-            return render_template("template_admin.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
-        elif session["perfil_nombre"][0][0] == 'lectura' and session["perfil_nombre"][0][1] == 'si':
-            return render_template("template_noEdit.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
-        elif session["perfil_nombre"][0][0] == 'escritura' and session["perfil_nombre"][0][1] == 'si':
-            return render_template("template.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
-        elif session["perfil_nombre"][0][1] == 'no':
-            flash("NO TIENE PERFIL ACTIVO", "danger")
-            return redirect(url_for('index'))
 
 
 @app.route("/consultar", methods=["GET", "POST"])
@@ -226,97 +167,52 @@ def consultar():
     cursor_host = consulta_host.select_consultar_host()
     host_name = cursor_host.fetchall()
 
-    local = session['option']
+    cursor3 = consulta_user_compania.select_user_compania()
+    cliente_usuario = cursor3.fetchall()
+    nombre = cliente_usuario[0][0]
+    cliente = cliente_usuario[0][1]
+    newList = []
+    for datas in data:
+        newMonitor = '('
+        for monitor in datas[4]:
+            nameMonitor = clientMonitor.dataMonitor(monitor)[0][0]
+            newMonitor += str(monitor) + '-' + str(nameMonitor) + ","
+        newMonitor = newMonitor[:-1]
+        newMonitor += ')'
+        _query = clientMonitor.selectClientMonitor(datas[4])
+        clientList = []
+        for dato in _query:
+            clientList.append(
+                {"objetivo": dato[0], "nombre_cliente": dato[1], "estado": dato[2]})
 
-    if local == 'local':
-        usuario = session["usr_local"][0][0]
-        cliente = session["usr_local"][0][2]
+        clientsDown = [x for x in clientList if x["estado"] == True]
+        clientList = map(lambda x: x["nombre_cliente"], clientList)
+        clientList = str(clientList)[1:-1]
 
-        newList = []
-        for datas in data:
-            newMonitor = '('
-            for monitor in datas[4]:
-                nameMonitor = clientMonitor.dataMonitor(monitor)[0][0]
-                newMonitor += str(monitor) + '-' + str(nameMonitor) + ","
-            newMonitor = newMonitor[:-1]
-            newMonitor += ')'
-            _query = clientMonitor.selectClientMonitor(datas[4])
-            clientList = []
-            for dato in _query:
-                clientList.append(
-                    {"objetivo": dato[0], "nombre_cliente": dato[1], "estado": dato[2]})
+        if len(clientsDown) != 0:
+            clientList = 'Todos'
+        dictData = {}
+        dictData["status"] = datas[0]
+        dictData["beginDate"] = datas[1]
+        dictData["solutionDate"] = datas[2]
+        dictData["fechAvisoCli"] = datas[3]
+        dictData["monitor"] = newMonitor
+        dictData["clients"] = clientList
+        dictData['qcliente'] = len(str(clientList).split(','))
+        dictData["problem"] = datas[5]
+        dictData["generateProblem"] = datas[6]
+        dictData["solution"] = datas[7]
+        dictData["culpable"] = datas[8]
+        dictData["id"] = datas[9]
+        newList.append(dictData)
 
-            clientsDown = [x for x in clientList if x["estado"] == True]
-            clientList = map(lambda x: x["nombre_cliente"], clientList)
-            clientList = str(clientList)[1:-1]
+    if session["perfil_nombre"][0][0] == 'administrador':
+        return render_template("template_admin.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
+    elif session["perfil_nombre"][0][0] == 'lectura':
+        return render_template("template_noEdit.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
+    elif session["perfil_nombre"][0][0] == 'escritura':
+        return render_template("template.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
 
-            if len(clientsDown) != 0:
-                clientList = 'Todos'
-            dictData = {}
-            dictData["status"] = datas[0]
-            dictData["beginDate"] = datas[1]
-            dictData["solutionDate"] = datas[2]
-            dictData["fechAvisoCli"] = datas[3]
-            dictData["monitor"] = newMonitor
-            dictData["clients"] = clientList
-            dictData['qcliente'] = len(str(clientList).split(','))
-            dictData["problem"] = datas[5]
-            dictData["generateProblem"] = datas[6]
-            dictData["solution"] = datas[7]
-            dictData["culpable"] = datas[8]
-            dictData["id"] = datas[9]
-            newList.append(dictData)
-        return render_template("template.html", data=newList, ayer=fecha, usuario=usuario, compania=cliente, host_name=host_name)
-
-    else:
-        cursor3 = consulta_user_compania.select_user_compania()
-        cliente_usuario = cursor3.fetchall()
-        nombre = cliente_usuario[0][0]
-        cliente = cliente_usuario[0][1]
-        newList = []
-        for datas in data:
-            newMonitor = '('
-            for monitor in datas[4]:
-                nameMonitor = clientMonitor.dataMonitor(monitor)[0][0]
-                newMonitor += str(monitor) + '-' + str(nameMonitor) + ","
-            newMonitor = newMonitor[:-1]
-            newMonitor += ')'
-            _query = clientMonitor.selectClientMonitor(datas[4])
-            clientList = []
-            for dato in _query:
-                clientList.append(
-                    {"objetivo": dato[0], "nombre_cliente": dato[1], "estado": dato[2]})
-
-            clientsDown = [x for x in clientList if x["estado"] == True]
-            clientList = map(lambda x: x["nombre_cliente"], clientList)
-            clientList = str(clientList)[1:-1]
-
-            if len(clientsDown) != 0:
-                clientList = 'Todos'
-            dictData = {}
-            dictData["status"] = datas[0]
-            dictData["beginDate"] = datas[1]
-            dictData["solutionDate"] = datas[2]
-            dictData["fechAvisoCli"] = datas[3]
-            dictData["monitor"] = newMonitor
-            dictData["clients"] = clientList
-            dictData['qcliente'] = len(str(clientList).split(','))
-            dictData["problem"] = datas[5]
-            dictData["generateProblem"] = datas[6]
-            dictData["solution"] = datas[7]
-            dictData["culpable"] = datas[8]
-            dictData["id"] = datas[9]
-            newList.append(dictData)
-
-        if session["perfil_nombre"][0][0] == 'administrador':
-            return render_template("template_admin.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
-        elif session["perfil_nombre"][0][0] == 'lectura':
-            return render_template("template_noEdit.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
-        elif session["perfil_nombre"][0][0] == 'escritura':
-            return render_template("template.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
-
-
-        # return render_template("template.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
 
 
 @app.route("/actualizar", methods=['POST'])
@@ -383,18 +279,10 @@ def mantenedor():
     if variable == 'False':
         return render_template("login.html")
 
-    local = session['option']
-    if local == 'local':
-        cursor4 = conexion_sqlite.conect_sql()
-        respuesta = cursor4.fetchall()
-        nombre = respuesta[0][0]
-        cliente = respuesta[0][2]
-        return render_template("mantenedor.html", usuario=nombre, compania=cliente)
-    else:
-        cursor3 = consulta_user_compania.select_user_compania()
-        cliente_usuario = cursor3.fetchall()
-        nombre = cliente_usuario[0][0]
-        cliente = cliente_usuario[0][1]
+    cursor3 = consulta_user_compania.select_user_compania()
+    cliente_usuario = cursor3.fetchall()
+    nombre = cliente_usuario[0][0]
+    cliente = cliente_usuario[0][1]
 
     cursor_user = consulta_user.select_user()
     user_add = cursor_user.fetchall()
@@ -432,7 +320,6 @@ def insertar_perfil():
 
 @app.route("/actualizar_perfil", methods=['POST'])
 def actualizar_perfil():
-
 
     variable = session_token(session)
     if variable == 'False':

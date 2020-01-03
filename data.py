@@ -69,8 +69,7 @@ class consulta_perfil:
                                   where b2.cliente_usuario_id = '%s'""", (usuario,))
             return cursor
         except:
-         print('aaaaa')
-         return False
+            return False
 
 
 class consulta_busqueda:
@@ -93,38 +92,23 @@ class consulta_busqueda:
 
 class actualiza_registro:
     @staticmethod
-    def update_registro(id,fecha_solucion,fecha_aviso_clientes,problema,problema_genera,solucion,culpable,estado):
+    def update_registro(id, fecha_solucion, fecha_aviso_clientes, problema, problema_genera, solucion, culpable, estado):
         try:
             fecha_actualizacion = datetime.now()
-            local = session['option']
-            if local == 'local':
-                usuario = session["usr_local"][0][0]
-                connection = psycopg2.connect(
-                    database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
-                cursor = connection.cursor()
-                cursor.execute(""" UPDATE sisreg.registro_sisticket
-               							SET usuario_nombre_update=%s,fecha_solucion=%s,fecha_aviso_clientes=%s,problema=%s,
-                                        problema_genera=%s,solucion=%s,culpable=%s,estado=%s
-            							WHERE id = %s
-            							""", (usuario,fecha_solucion,fecha_aviso_clientes,problema,problema_genera,solucion,culpable,estado,id))
 
-                connection.commit()
-                flash("DATOS ACTUALIZADOS EXITOSAMENTE", "success")
+            usuario = session["usr_api"][0][0]
+            usuario_id = session['cliente_usuario_id']
 
-            else:
-                usuario = session["usr_api"][0][0]
-                usuario_id = session['cliente_usuario_id']
-
-                connection = psycopg2.connect(
-                    database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
-                cursor = connection.cursor()
-                cursor.execute(""" UPDATE sisreg.registro_sisticket
-               							SET usuario_nombre_update=%s,usuario_id_update =%s,fecha_solucion=%s,fecha_aviso_clientes=%s,problema=%s,
-                                        problema_genera=%s,solucion=%s,culpable=%s,estado=%s
-            							WHERE id = %s
-            							""", (usuario, usuario_id,fecha_solucion,fecha_aviso_clientes,problema,problema_genera,solucion,culpable,estado,id))
-                connection.commit()
-                flash("DATOS ACTUALIZADOS EXITOSAMENTE", "success")
+            connection = psycopg2.connect(
+                database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
+            cursor = connection.cursor()
+            cursor.execute(""" UPDATE sisreg.registro_sisticket
+                                    SET usuario_nombre_update=%s,usuario_id_update =%s,fecha_solucion=%s,fecha_aviso_clientes=%s,problema=%s,
+                                    problema_genera=%s,solucion=%s,culpable=%s,estado=%s
+                                    WHERE id = %s
+                                    """, (usuario, usuario_id, fecha_solucion, fecha_aviso_clientes, problema, problema_genera, solucion, culpable, estado, id))
+            connection.commit()
+            flash("DATOS ACTUALIZADOS EXITOSAMENTE", "success")
 
         except:
             flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
@@ -143,39 +127,22 @@ class insertar_registro:
 
         # FECHA ACTUAL
         fecha_creacion = datetime.now()
+        
+        usuario = session["usr_api"][0][0]
+        usuario_id = session['cliente_usuario_id']
+        connection = psycopg2.connect(
+            database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
+        cursor = connection.cursor()
+        cursor.execute("""INSERT INTO sisreg.registro_sisticket
+                                            (id, estado,usuario_nombre_insert,usuario_id_insert,fecha_inicio_evento,inframonitor,problema,
+                                            fecha_carga,culpable,fecha_solucion,fecha_aviso_clientes,problema_genera,solucion)
+                                            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                       (id_datos, estado, usuario, usuario_id, fecha_inicio_evento, monitor, problema,
+                        fecha_creacion, culpable, fecha_solucion, fecha_aviso_clientes, problema_genera, solucion))
 
-        local = session['option']
-        if local == 'local':
-            usuario = session["usr_local"][0][0]
-            connection = psycopg2.connect(
-                database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
-            cursor = connection.cursor()
-            cursor.execute("""INSERT INTO sisreg.registro_sisticket
-                                            (id, estado, usuario_nombre_insert ,fecha_inicio_evento, inframonitor, problema,fecha_carga,
-                                            culpable,fecha_solucion,fecha_aviso_clientes,problema_genera,solucion)
-                                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-                           (id_datos, estado, usuario, fecha_inicio_evento, monitor, problema, fecha_creacion, culpable,
-                            fecha_solucion, fecha_aviso_clientes, problema_genera, solucion))
-            connection.commit()
-            flash("DATOS INGRESADOS CON EXITO", "success")
-            return cursor
-
-        else:
-            usuario = session["usr_api"][0][0]
-            usuario_id = session['cliente_usuario_id']
-            connection = psycopg2.connect(
-                database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
-            cursor = connection.cursor()
-            cursor.execute("""INSERT INTO sisreg.registro_sisticket
-                                                (id, estado,usuario_nombre_insert,usuario_id_insert,fecha_inicio_evento,inframonitor,problema,
-                                                fecha_carga,culpable,fecha_solucion,fecha_aviso_clientes,problema_genera,solucion)
-                                                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-                           (id_datos, estado, usuario, usuario_id, fecha_inicio_evento, monitor, problema,
-                            fecha_creacion, culpable, fecha_solucion, fecha_aviso_clientes, problema_genera, solucion))
-
-            connection.commit()
-            flash("DATOS INGRESADOS CON EXITO", "success")
-            return cursor
+        connection.commit()
+        flash("DATOS INGRESADOS CON EXITO", "success")
+        return cursor
 
 
 class consulta_host:
@@ -245,6 +212,7 @@ class clientMonitor:
             flash("NO SE PUEDE REALIZAR LA BUSQUEDA DE REGISTRO", "danger")
         return ''
 
+
 class consulta_user_perfiles:
     @staticmethod
     def select_user_perfil():
@@ -255,74 +223,43 @@ class consulta_user_perfiles:
                               ON a1.perfil_id = a2.perfil_id""")
             return cursor
         except:
-         return False
+            return False
 
 
 class actualiza_perfil:
     @staticmethod
-    def update_perfil(nombre_perfil,activo,id_perfil_usuario):
+    def update_perfil(nombre_perfil, activo, id_perfil_usuario):
         try:
+            connection = psycopg2.connect(
+                database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
+            cursor = connection.cursor()
+            cursor.execute(""" UPDATE sisreg.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
+                           (nombre_perfil, activo, id_perfil_usuario))
 
-            local = session['option']
-            if local == 'local':
-
-                connection = psycopg2.connect(
-                    database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
-                cursor = connection.cursor()
-                cursor.execute(""" UPDATE sisreg.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
-                               (nombre_perfil, activo, id_perfil_usuario))
-
-                connection.commit()
-                flash("DATOS ACTUALIZADOS EXITOSAMENTE", "success")
-
-            else:
-
-                connection = psycopg2.connect(
-                    database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
-                cursor = connection.cursor()
-                cursor.execute(""" UPDATE sisreg.perfil_usuario SET  perfil_id=%s, activo=%s WHERE id_perfil_usuario =%s """,
-                               (nombre_perfil, activo, id_perfil_usuario))
-
-                connection.commit()
-                flash("DATOS ACTUALIZADOS EXITOSAMENTE", "success")
-
+            connection.commit()
+            flash("DATOS ACTUALIZADOS EXITOSAMENTE", "success")
         except:
             flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
             return cursor
 
+
 class insertar_registro_perfil:
     @staticmethod
-    def insert_perfil(list,perfil_usr_add,activo_usr_add):
+    def insert_perfil(list, perfil_usr_add, activo_usr_add):
 
-        cursor = conexion.conect_post()
-
-        local = session['option']
-        if local == 'local':
-
-            connection = psycopg2.connect(
-                database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
-            cursor = connection.cursor()
+        connection = psycopg2.connect(
+            database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
+        cursor = connection.cursor()
+        for data in list:
+            cursor.execute(
+                "SELECT MAX( id_perfil_usuario ) + 1 FROM sisreg.perfil_usuario")
+            id_datos = cursor.fetchone()
             cursor.execute("""INSERT INTO sisreg.perfil_usuario(id_perfil_usuario, cliente_usuario_id, perfil_id, activo, nombre_usuario)
-                                        VALUES (%s,%s,'2','si',%s)""", (id_datos,id_usuario_perfil,nombre_usuario_perfil))
+                                    VALUES (%s,%s,%s,%s,%s)""",
+                           (id_datos, data["id_usuario_perfil"], perfil_usr_add, activo_usr_add, data["nombre_usuario_perfil"]))
             connection.commit()
-            flash("DATOS INGRESADOS CON EXITO", "success")
-            return cursor
-
-        else:
-
-            connection = psycopg2.connect(
-                database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
-            cursor = connection.cursor()
-            for data in list:
-                cursor.execute(
-                    "SELECT MAX( id_perfil_usuario ) + 1 FROM sisreg.perfil_usuario")
-                id_datos = cursor.fetchone()
-                cursor.execute("""INSERT INTO sisreg.perfil_usuario(id_perfil_usuario, cliente_usuario_id, perfil_id, activo, nombre_usuario)
-                                        VALUES (%s,%s,%s,%s,%s)""",
-                                        (id_datos,data["id_usuario_perfil"],perfil_usr_add,activo_usr_add,data["nombre_usuario_perfil"]))
-                connection.commit()
-                flash("DATOS INGRESADOS CON EXITO", "success")
-            return cursor
+        flash("DATOS INGRESADOS CON EXITO", "success")
+        return cursor
 
 
 class actualizar_public_cliente:
@@ -338,7 +275,6 @@ class actualizar_public_cliente:
                                (data["id_usuario_perfil"],))
                 connection.commit()
 
-                print('aaaaa', data["id_usuario_perfil"])
         except:
             flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
             return cursor
