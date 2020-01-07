@@ -313,9 +313,10 @@
     <span class="counter pull-right"></span>
     <br>
 
-    <!-- <button id="exportButton" data-toggle="tooltip" title="Exportar Excel" class="btn btn-lg clearfix" style="background-color:rgb(23, 113, 11);color:#f0f0f0;float:right"> -->
-    <!-- <span class="fas fa-file-excel" ></span> </button> -->
-    <table id="example" class="table table-hover table-bordered results" style="width:100%; text-align: center;">
+    <!-- <button onclick="exportTableToExcel('tblGastos', 'Gastos')" data-toggle="tooltip"
+        title="Exportar Excel" class="btn btn-lg clearfix" style="background-color:rgb(23, 113, 11);color:#f0f0f0;float:right">
+      <span class="fas fa-file-excel"></span> </button> -->
+    <table id="tblGastos" class="table table-hover table-bordered results" style="width:100%; text-align: center;">
       <thead style="background-color:rgb(236, 101, 14)">
         <tr>
           <th scope="col">
@@ -537,7 +538,7 @@
       {% endfor %}
       <script type="text/javascript">
         $(document).ready(function() {
-          $('#example').DataTable({
+          $('#tblGastos').DataTable({
             "scrollY": 500,
             "scrollX": true,
             "paging": false,
@@ -583,6 +584,8 @@
           });
         });
       </script>
+
+
     </table>
 
   </div>

@@ -278,3 +278,16 @@ class actualizar_public_cliente:
         except:
             flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
             return cursor
+
+class actualizar_rtrim:
+    @staticmethod
+    def update_rtrim():
+        try:
+            connection = psycopg2.connect(
+                database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
+            cursor = connection.cursor()
+            cursor.execute(""" UPDATE sisreg.perfil_usuario SET cliente_usuario_id=rtrim(cliente_usuario_id) """)
+            connection.commit()
+        except:
+            flash("NO ES POSIBLE ACTUALIZAR  RTRIM!!", "danger")
+            return cursor

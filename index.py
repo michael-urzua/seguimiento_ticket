@@ -5,7 +5,7 @@ from datetime import datetime, date, time, timedelta
 import requests
 from data import consulta_busqueda, consulta_user_compania, actualiza_registro,\
  consulta_inicial, consulta_host, insertar_registro, clientMonitor, consulta_perfil,  \
- consulta_user, consulta_user_perfiles,actualiza_perfil,insertar_registro_perfil,actualizar_public_cliente
+ consulta_user, consulta_user_perfiles,actualiza_perfil,insertar_registro_perfil,actualizar_public_cliente,actualizar_rtrim
 
 from utils.get_token import get
 from utils.globals import url2, url_chek
@@ -132,6 +132,9 @@ def inicio():
         dictData["culpable"] = datas[8]
         dictData["id"] = datas[9]
         newList.append(dictData)
+
+    # print session["perfil_nombre"][0][0]
+    print session
 
     if session["perfil_nombre"][0][0] == 'administrador' and session["perfil_nombre"][0][1] == 'si':
         return render_template("template_admin.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
@@ -313,6 +316,7 @@ def insertar_perfil():
     cursor = insertar_registro_perfil.insert_perfil(listUsr,perfil_usr_add,activo_usr_add)
     if cursor != False:
         cursor2 = actualizar_public_cliente.update_public_cliente(listUsr)
+        cursor3 = actualizar_rtrim.update_rtrim()
 
     return redirect(url_for('mantenedor'))
 
