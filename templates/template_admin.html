@@ -313,48 +313,49 @@
     <span class="counter pull-right"></span>
     <br>
 
-    <!-- <button onclick="exportTableToExcel('tblGastos', 'Gastos')" data-toggle="tooltip"
+     <button onclick="ExportToExcel(jQuery('#tabla'));" data-toggle="tooltip"
         title="Exportar Excel" class="btn btn-lg clearfix" style="background-color:rgb(23, 113, 11);color:#f0f0f0;float:right">
-      <span class="fas fa-file-excel"></span> </button> -->
-    <table id="tblGastos" class="table table-hover table-bordered results" style="width:100%; text-align: center;">
+      <span class="fas fa-file-excel"></span> </button>
+
+    <table id="tabla" class="table table-hover table-bordered results" style="width:100%; text-align: center;">
       <thead style="background-color:rgb(236, 101, 14)">
         <tr>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Accion</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Estado</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Fecha Inicio Evento</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Fecha Solucion</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Fecha Aviso Clientes</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Monitor Hostname</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Clientes Afectado</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">N° Clientes Afectado</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Problema</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Problema Generado</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Solucion</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Culpable</p>
-          </th>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;size:14px">Accion</p></b>
+          </td>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;">Estado</p></b>
+          </td>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;">Fecha Inicio Evento</p></b>
+          </td>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;">Fecha Solucion</p></b>
+          </td>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;">Fecha Aviso Clientes</p></b>
+          </td>
+          <td scope="col">
+          <b><p style="color:#f0f0f0;">Monitor Hostname</p></b>
+          </td>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;">Clientes Afectado</p></b>
+          </td>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;">N° Clientes Afectado</p></b>
+          </td>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;">Problema</p></b>
+          </td>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;">Problema Generado</p></b>
+          </td>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;">Solucion</p></b>
+          </td>
+          <td scope="col">
+            <b><p style="color:#f0f0f0;">Culpable</p></b>
+          </td>
         </tr>
 
       </thead>
@@ -509,10 +510,10 @@
               </div>
             </div>
             <!-- ENDModal -->
+          </td>
 
 
-
-            {% if datos["status"] == True %}
+          {% if datos["status"] == True %}
           <th><span class="far fa-check-circle text-success fa-2x"></span></th>
           {%else%}
           <th><span class="far fa-times-circle  text-danger fa-2x"></span></th>
@@ -524,11 +525,11 @@
           {% if datos["clients"] == '' %}
           <td>SIN CLIENTES</td>
           {%else%}
-          <td><span style="text-overflow: ellipsis;" alt="{{datos["clients"]}}" title="{{datos["clients"]}}">{{datos["clients"] | truncate(50)}}</span></td>
+          <td><span style="text-overflow: clip;" alt="{{datos["clients"]}}" title="{{datos["clients"]}}">{{datos["clients"] | truncate(50)}}</span></td>
           {%endif%}
           <td>{{datos.qcliente}}</td>
-          <td><span style="text-overflow: ellipsis;" alt="{{datos["problem"]}}" title="{{datos["problem"]}}">{{datos["problem"] | truncate(50)}}</span></td>
-          <td><span style="text-overflow: ellipsis;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
+          <td><span style="text-overflow: clip;" alt="{{datos["problem"]}}" title="{{datos["problem"]}}">{{datos["problem"] | truncate(50)}}</span></td>
+          <td><span style="text-overflow: clip;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
           <td>{{datos["solution"]}}</td>
           <td>{{datos["culpable"]}}</td>
 
@@ -538,7 +539,7 @@
       {% endfor %}
       <script type="text/javascript">
         $(document).ready(function() {
-          $('#tblGastos').DataTable({
+          $('#tabla').DataTable({
             "scrollY": 500,
             "scrollX": true,
             "paging": false,
@@ -583,6 +584,38 @@
             }
           });
         });
+      </script>
+
+      <script type="text/javascript">
+        function ExportToExcel(tabla) {
+          var clone = tabla.clone();
+          var trs = clone.find('tr');
+          $.each(trs, function(i, tr) {
+            $(tr).find('td:eq(0)').remove();
+          });
+          var htmlExport = clone.prop('outerHTML');
+          var ua = window.navigator.userAgent;
+          var msie = ua.indexOf("MSIE ");
+
+          //other browser not tested on IE 11
+          // If Internet Explorer
+          if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            jQuery('body').append("<iframe id=\"iframeExport\" style=\"display:none\"></iframe>");
+            iframeExport.document.open("txt/html", "replace");
+            iframeExport.document.write(htmlExport);
+            iframeExport.document.close();
+            iframeExport.focus();
+            sa = iframeExport.document.execCommand("SaveAs", true, "List.xls");
+          } else {
+            var link = document.createElement('a');
+
+            document.body.appendChild(link); // Firefox requires the link to be in the body
+            link.download = "List.xls";
+            link.href = 'data:application/vnd.ms-excel,' + escape(htmlExport);
+            link.click();
+            document.body.removeChild(link);
+          }
+        }
       </script>
 
 
