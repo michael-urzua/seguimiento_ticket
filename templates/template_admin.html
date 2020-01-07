@@ -29,8 +29,8 @@
   {% block content %}
   <!-- .......-CABECERA-....... -->
   <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
-    <li><a class="navbar-brand" href="{{url_for('inicio')}}"><i class="fas fa-home" style="font-size:30px;color:rgb(236, 101, 14)"></i> SEGUIMIENTO TICKET</a></li>
-    <li><a class="navbar-brand" href="{{url_for('mantenedor')}}">ADMIN. USUARIOS</a></li>
+    <li class="ancho_barra"><a class="navbar-brand" href="{{url_for('inicio')}}"><i class="fas fa-home" style="font-size:30px;color:rgb(236, 101, 14)"></i> SEGUIMIENTO TICKET</a></li>
+    <li class="ancho_barra"><a class="navbar-brand" href="{{url_for('mantenedor')}}">ADMIN. USUARIOS</a></li>
     <form action="/logout" method="POST">
       <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
       <a style="float:right" class="navbar-brand">{{usuario}}</a>
@@ -326,28 +326,28 @@
             <p style="color:#f0f0f0;">Estado</p>
           </th>
           <th scope="col">
-            <p style="color:#f0f0f0;">Fecha_Inicio_Evento</p>
+            <p style="color:#f0f0f0;">Fecha Inicio Evento</p>
           </th>
           <th scope="col">
-            <p style="color:#f0f0f0;">Fecha_Solucion</p>
+            <p style="color:#f0f0f0;">Fecha Solucion</p>
           </th>
           <th scope="col">
-            <p style="color:#f0f0f0;">fecha_aviso_clientes</p>
+            <p style="color:#f0f0f0;">Fecha Aviso Clientes</p>
           </th>
           <th scope="col">
-            <p style="color:#f0f0f0;">Monitor_Hostname</p>
+            <p style="color:#f0f0f0;">Monitor Hostname</p>
           </th>
           <th scope="col">
-            <p style="color:#f0f0f0;">Clientes_Afectado</p>
+            <p style="color:#f0f0f0;">Clientes Afectado</p>
           </th>
           <th scope="col">
-            <p style="color:#f0f0f0;">Número_Clientes_Afectado</p>
+            <p style="color:#f0f0f0;">N° Clientes Afectado</p>
           </th>
           <th scope="col">
             <p style="color:#f0f0f0;">Problema</p>
           </th>
           <th scope="col">
-            <p style="color:#f0f0f0;">Problema_Generado</p>
+            <p style="color:#f0f0f0;">Problema Generado</p>
           </th>
           <th scope="col">
             <p style="color:#f0f0f0;">Solucion</p>
