@@ -303,9 +303,6 @@
 
   <!-- FIN INSERTAR REGISTROS  -->
 
-
-
-
   <div class="jumbotron jumbotron-fluid" style="padding-top: 14px ;padding-bottom: 5px; padding: 5px;">
     <div class="form-group pull-right" style="width:15%">
       <input type="text" class="search form-control" placeholder="Buscar">
@@ -313,54 +310,80 @@
     <span class="counter pull-right"></span>
     <br>
 
-     <button onclick="ExportToExcel(jQuery('#tabla'));" data-toggle="tooltip"
-        title="Exportar Excel" class="btn btn-lg clearfix" style="background-color:rgb(23, 113, 11);color:#f0f0f0;float:right">
-      <span class="fas fa-file-excel"></span> </button>
+    <button  class="btn btn-lg clearfix" onclick="ExportToExcel(jQuery('#tabla'));" data-toggle="modal" data-target="#myModalTabla"
+      style="background-color:rgb(23, 113, 11);color:#f0f0f0;">
+      <span class="fas fa-file-excel"></span> Exportar Excel </button>
 
-    <table id="tabla" class="table table-hover table-bordered results" style="width:100%; text-align: center;">
+
+    <table id="tabla_principal" class="table table-hover table-bordered results" style="width:100%; text-align: center;">
       <thead style="background-color:rgb(236, 101, 14)">
         <tr>
           <td scope="col">
-            <b><p style="color:#f0f0f0;size:14px">Accion</p></b>
+            <b>
+              <p style="color:#f0f0f0;size:14px">Accion</p>
+            </b>
           </td>
           <td scope="col">
-            <b><p style="color:#f0f0f0;">Estado</p></b>
+            <b>
+              <p style="color:#f0f0f0;">Estado</p>
+            </b>
           </td>
           <td scope="col">
-            <b><p style="color:#f0f0f0;">Fecha Inicio Evento</p></b>
+            <b>
+              <p style="color:#f0f0f0;">Fecha Inicio Evento</p>
+            </b>
           </td>
           <td scope="col">
-            <b><p style="color:#f0f0f0;">Fecha Solucion</p></b>
+            <b>
+              <p style="color:#f0f0f0;">Fecha Solucion</p>
+            </b>
           </td>
           <td scope="col">
-            <b><p style="color:#f0f0f0;">Fecha Aviso Clientes</p></b>
+            <b>
+              <p style="color:#f0f0f0;">Fecha Aviso Clientes</p>
+            </b>
           </td>
           <td scope="col">
-          <b><p style="color:#f0f0f0;">Monitor Hostname</p></b>
+            <b>
+              <p style="color:#f0f0f0;">Monitor Hostname</p>
+            </b>
           </td>
           <td scope="col">
-            <b><p style="color:#f0f0f0;">Clientes Afectado</p></b>
+            <b>
+              <p style="color:#f0f0f0;">Clientes Afectado</p>
+            </b>
           </td>
           <td scope="col">
-            <b><p style="color:#f0f0f0;">N° Clientes Afectado</p></b>
+            <b>
+              <p style="color:#f0f0f0;">N° Clientes Afectado</p>
+            </b>
           </td>
           <td scope="col">
-            <b><p style="color:#f0f0f0;">Problema</p></b>
+            <b>
+              <p style="color:#f0f0f0;">Problema</p>
+            </b>
           </td>
           <td scope="col">
-            <b><p style="color:#f0f0f0;">Problema Generado</p></b>
+            <b>
+              <p style="color:#f0f0f0;">Problema Generado</p>
+            </b>
           </td>
           <td scope="col">
-            <b><p style="color:#f0f0f0;">Solucion</p></b>
+            <b>
+              <p style="color:#f0f0f0;">Solucion</p>
+            </b>
           </td>
           <td scope="col">
-            <b><p style="color:#f0f0f0;">Culpable</p></b>
+            <b>
+              <p style="color:#f0f0f0;">Culpable</p>
+            </b>
           </td>
         </tr>
 
       </thead>
       {% for datos in data%}
       <tbody>
+
         <tr style="width:100%">
           <td>
             <a href="/actualizar/{{datos["id"]}}" class="btn btn-warning" data-toggle="modal" data-target="#myModal2{{datos["id"]}}">
@@ -539,7 +562,7 @@
       {% endfor %}
       <script type="text/javascript">
         $(document).ready(function() {
-          $('#tabla').DataTable({
+          $('#tabla_principal').DataTable({
             "scrollY": 500,
             "scrollX": true,
             "paging": false,
@@ -586,6 +609,107 @@
         });
       </script>
 
+    </table>
+
+
+    <!-- The Modal -->
+    <div class="modal fade" id="myModalTabla">
+      <div class="modal-dialog modal-lg" style="max-width: 1000px;">
+        <div class="modal-content">
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="table-responsive" style="overflow:scroll;height:500px;">
+              <table class="table table-bordered" id="tabla">
+                <thead style="background-color:rgb(236, 101, 14)">
+                  <tr>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Estado</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Fecha Inicio Evento</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Fecha Solucion</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Fecha Aviso Clientes</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Monitor Hostname</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Clientes Afectado</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">N° Clientes Afectado</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Problema</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Problema Generado</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Solucion</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Culpable</p>
+                      </b>
+                    </td>
+                  </tr>
+
+                </thead>
+                {% for datos in data%}
+                <tbody>
+                  <tr style="width:100%">
+                    {% if datos["status"] == True %}
+                    <th>Habilitado</th>
+                    {%else%}
+                    <th>Deshabilitado</th>
+                    {%endif%}
+                    <td>{{datos["beginDate"]}}</td>
+                    <td>{{datos["solutionDate"]}}</td>
+                    <td>{{datos["fechAvisoCli"]}}</td>
+                    <td>{{datos["monitor"]}}</td>
+                    {% if datos["clients"] == '' %}
+                    <td>SIN CLIENTES</td>
+                    {%else%}
+                    <td>{{datos["clients"]}}</td>
+                    {%endif%}
+                    <td>{{datos.qcliente}}</td>
+                    <td>{{datos["problem"]}}</td>
+                    <td>{{datos["generateProblem"]}}</td>
+                    <td>{{datos["solution"]}}</td>
+                    <td>{{datos["culpable"]}}</td>
+                  </tr>
+                </tbody>
+                {% endfor %}
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
       <script type="text/javascript">
         function ExportToExcel(tabla) {
           var clone = tabla.clone();
@@ -617,9 +741,20 @@
           }
         }
       </script>
+      <script type="text/javascript">
+        $(function() {
+          $('#myModalTabla').on('show.bs.modal', function() {
+            var myModal = $(this);
+            clearTimeout(myModalTabla.data('hideInterval'));
+            myModalTabla.data('hideInterval', setTimeout(function() {
+              myModalTabla.modal('hide');
+            }, 1000));
+          });
+        });
+      </script>
+    </div>
 
 
-    </table>
 
   </div>
 

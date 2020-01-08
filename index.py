@@ -133,9 +133,6 @@ def inicio():
         dictData["id"] = datas[9]
         newList.append(dictData)
 
-    # print session["perfil_nombre"][0][0]
-    print session
-
     if session["perfil_nombre"][0][0] == 'administrador' and session["perfil_nombre"][0][1] == 'si':
         return render_template("template_admin.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
     elif session["perfil_nombre"][0][0] == 'lectura' and session["perfil_nombre"][0][1] == 'si':
