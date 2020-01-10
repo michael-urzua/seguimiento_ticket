@@ -84,7 +84,8 @@ class consulta_busqueda:
                                  FROM
                                     sisreg.registro_sisticket
                                 where
-                                    fecha_inicio_evento::date BETWEEN %s and %s order by estado, fecha_inicio_evento asc""", (fecha_inicial_1, fecha_inicial_2,))
+                                    fecha_inicio_evento::date BETWEEN %s and %s order by estado, fecha_inicio_evento asc""",
+                                    (fecha_inicial_1, fecha_inicial_2,))
             return cursor
         except:
             flash("NO SE PUEDE REALIZAR BUSQUEDA !!", "danger")
@@ -98,6 +99,9 @@ class actualiza_registro:
 
             usuario = session["usr_api"][0][0]
             usuario_id = session['cliente_usuario_id']
+
+            # connection = psycopg2.connect(
+                # database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
 
             connection = psycopg2.connect(
                 database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
@@ -130,6 +134,9 @@ class insertar_registro:
 
         usuario = session["usr_api"][0][0]
         usuario_id = session['cliente_usuario_id']
+
+        # connection = psycopg2.connect(
+            # database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
         connection = psycopg2.connect(
             database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
         cursor = connection.cursor()
@@ -165,7 +172,7 @@ class consulta_host:
                                     ORDER BY tipo, id;""")
             return cursor
         except:
-            flash("NO SE PUEDE REALIZAR LA BUSQUEDA DE REGISTRO", "danger")
+            flash("NO SE PUEDE REALIZAR LA BUSQUEDA DE MONITOR", "danger")
 
 
 class clientMonitor:
@@ -230,6 +237,9 @@ class actualiza_perfil:
     @staticmethod
     def update_perfil(nombre_perfil, activo, id_perfil_usuario):
         try:
+            # connection = psycopg2.connect(
+                # database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
+
             connection = psycopg2.connect(
                 database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
             cursor = connection.cursor()
@@ -246,6 +256,9 @@ class actualiza_perfil:
 class insertar_registro_perfil:
     @staticmethod
     def insert_perfil(list, perfil_usr_add, activo_usr_add):
+
+        # connection = psycopg2.connect(
+            # database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
 
         connection = psycopg2.connect(
             database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
@@ -266,6 +279,9 @@ class actualizar_public_cliente:
     @staticmethod
     def update_public_cliente(list):
         try:
+            # connection = psycopg2.connect(
+                # database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
+
             connection = psycopg2.connect(
                 database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
             cursor = connection.cursor()
@@ -279,14 +295,18 @@ class actualizar_public_cliente:
             flash("NO ES POSIBLE ACTUALIZAR !!", "danger")
             return cursor
 
+
 class actualizar_rtrim:
     @staticmethod
     def update_rtrim():
         try:
+            # connection = psycopg2.connect(
+                # database="central2010", user="reporte_web", password=".112233.", host="10.20.12.100", port="5432")
             connection = psycopg2.connect(
                 database="central2010", user="postgres", password="", host="172.16.5.117", port="5432")
             cursor = connection.cursor()
-            cursor.execute(""" UPDATE sisreg.perfil_usuario SET cliente_usuario_id=rtrim(cliente_usuario_id) """)
+            cursor.execute(
+                """ UPDATE sisreg.perfil_usuario SET cliente_usuario_id=rtrim(cliente_usuario_id) """)
             connection.commit()
         except:
             flash("NO ES POSIBLE ACTUALIZAR  RTRIM!!", "danger")

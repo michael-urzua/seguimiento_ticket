@@ -21,38 +21,14 @@
       color: #de1b1b;
     }
   </style>
-  {% extends "librerias.html" %}
+  {% include "librerias.html" %}
+  {% include "menu.html" %}
 </head>
 
 <body>
 
   {% block content %}
-  <!-- .......-CABECERA-....... -->
-  <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
-    <li class="ancho_barra"><a class="navbar-brand" href="{{url_for('inicio')}}"><i class="fas fa-home" style="font-size:30px;color:rgb(236, 101, 14)"></i> SEGUIMIENTO TICKET</a></li>
-    <form action="/logout" method="POST">
-      <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
-      <a style="float:right" class="navbar-brand">{{usuario}}</a>
-      <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
-      <a style="float:right" class="navbar-brand">{{compania}}</a>
-      <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
-    </form><br>
-  </ul>
 
-  <!-- .......-CABECERA-....... -->
-
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  {% for category, message in messages %}
-  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-    <span>{{ message }}</span>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
 
 
 

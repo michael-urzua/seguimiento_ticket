@@ -45,7 +45,6 @@ def acceso():
     usuario = request.form['email']
     clave = request.form['password']
 
-
     r = get.get_api(usuario, clave)
     if r == False:
         flash("Problemas en la conexion API ")
@@ -77,20 +76,22 @@ def inicio():
     if variable == 'False':
         return render_template("login.html")
 
+    #CONSULTA INICIAL TABLA PRINCIPAL
     cursor = consulta_inicial.select_inicio()
     if cursor == False:
-
         flash("No hay conexion a la BD", "danger")
         return redirect(url_for('index'))
 
+    #CONSULTA DESPLEGA MONITORES
     cursor_host = consulta_host.select_consultar_host()
     host_name = cursor_host.fetchall()
 
-    # PERFIL
+    #CONSULTA PERFIL DE USUARIO Y SI ESTA ACTIVO
     cursor_perfil = consulta_perfil.select_perfil()
     perfil_name = cursor_perfil.fetchall()
     session["perfil_nombre"] = perfil_name
 
+    #CONSULTA NOMBRE Y CLIENTE
     cursor1 = consulta_user_compania.select_user_compania()
     cliente_usuario = cursor1.fetchall()
     session["usr_api"] = (cliente_usuario)
@@ -133,16 +134,27 @@ def inicio():
         dictData["id"] = datas[9]
         newList.append(dictData)
 
-    if session["perfil_nombre"][0][0] == 'administrador' and session["perfil_nombre"][0][1] == 'si':
-        return render_template("template_admin.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
-    elif session["perfil_nombre"][0][0] == 'lectura' and session["perfil_nombre"][0][1] == 'si':
-        return render_template("template_noEdit.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
-    elif session["perfil_nombre"][0][0] == 'escritura' and session["perfil_nombre"][0][1] == 'si':
-        return render_template("template.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
-    elif session["perfil_nombre"][0][1] == 'no':
-        flash("NO TIENE PERFIL ACTIVO", "danger")
-        return redirect(url_for('index'))
 
+    newDict= dict(session)
+    if newDict["perfil_nombre"]:
+
+        if session["perfil_nombre"][0][1] == 'si':
+
+            if session["perfil_nombre"][0][0] == 'administrador':
+                return render_template("template_admin.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+
+            elif session["perfil_nombre"][0][0] == 'lectura':
+                return render_template("template_noEdit.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+
+            elif session["perfil_nombre"][0][0] == 'escritura':
+                return render_template("template.html", data=newList, usuario=usuario, compania=cliente, host_name=host_name)
+
+        elif session["perfil_nombre"][0][1] == 'no':
+            flash("NO TIENE PERFIL ACTIVO", "danger")
+            return redirect(url_for('index'))
+    else:
+        flash("NO SE ENCUENTRA REGISTRADO", "danger")
+        return redirect(url_for('index'))
 
 
 @app.route("/consultar", methods=["GET", "POST"])
@@ -160,8 +172,7 @@ def consultar():
     fecha_inicial_1 = datetime.strptime(str(fecha_inicial_1), '%d/%m/%Y')
     fecha_inicial_2 = datetime.strptime(str(fecha_inicial_2), '%d/%m/%Y')
 
-    cursor = consulta_busqueda.select_consultar(
-        fecha_inicial_1, fecha_inicial_2)
+    cursor = consulta_busqueda.select_consultar(fecha_inicial_1, fecha_inicial_2)
     data = cursor.fetchall()
     cursor_host = consulta_host.select_consultar_host()
     host_name = cursor_host.fetchall()
@@ -205,13 +216,26 @@ def consultar():
         dictData["id"] = datas[9]
         newList.append(dictData)
 
-    if session["perfil_nombre"][0][0] == 'administrador':
-        return render_template("template_admin.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
-    elif session["perfil_nombre"][0][0] == 'lectura':
-        return render_template("template_noEdit.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
-    elif session["perfil_nombre"][0][0] == 'escritura':
-        return render_template("template.html", data=newList, ayer=fecha, usuario=nombre, compania=cliente, host_name=host_name)
+    newDict= dict(session)
+    if newDict["perfil_nombre"]:
 
+        if session["perfil_nombre"][0][1] == 'si':
+
+            if session["perfil_nombre"][0][0] == 'administrador':
+                return render_template("template_admin.html", data=newList, usuario=nombre, compania=cliente, host_name=host_name)
+
+            elif session["perfil_nombre"][0][0] == 'lectura':
+                return render_template("template_noEdit.html", data=newList, usuario=nombre, compania=cliente, host_name=host_name)
+
+            elif session["perfil_nombre"][0][0] == 'escritura':
+                return render_template("template.html", data=newList, usuario=nombre, compania=cliente, host_name=host_name)
+
+        elif session["perfil_nombre"][0][1] == 'no':
+            flash("NO TIENE PERFIL ACTIVO", "danger")
+            return redirect(url_for('index'))
+    else:
+        flash("NO SE ENCUENTRA REGISTRADO", "danger")
+        return redirect(url_for('index'))
 
 
 @app.route("/actualizar", methods=['POST'])
