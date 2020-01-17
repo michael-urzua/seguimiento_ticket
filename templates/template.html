@@ -296,7 +296,7 @@
       <thead style="background-color:rgb(236, 101, 14)">
         <tr>
           <th scope="col">
-            <p style="color:#f0f0f0;">Accion</p>
+            <p style="color:#f0f0f0;">Acción</p>
           </th>
           <th scope="col">
             <p style="color:#f0f0f0;">Estado</p>
@@ -305,7 +305,7 @@
             <p style="color:#f0f0f0;">Fecha Inicio Evento</p>
           </th>
           <th scope="col">
-            <p style="color:#f0f0f0;">Fecha Solucion</p>
+            <p style="color:#f0f0f0;">Fecha Solución</p>
           </th>
           <th scope="col">
             <p style="color:#f0f0f0;">Fecha Aviso Clientes</p>
@@ -325,8 +325,8 @@
           <th scope="col">
             <p style="color:#f0f0f0;">Problema Generado</p>
           </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Solucion</p>
+          <th scope="col" style="width: 250px">
+            <p style="color:#f0f0f0;">Solución</p>
           </th>
           <th scope="col">
             <p style="color:#f0f0f0;">Culpable</p>
@@ -515,7 +515,7 @@
           <td>{{datos.qcliente}}</td>
           <td><span style="text-overflow: ellipsis;" alt="{{datos["problem"]}}" title="{{datos["problem"]}}">{{datos["problem"] | truncate(50)}}</span></td>
           <td><span style="text-overflow: ellipsis;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
-          <td>{{datos["solution"]}}</td>
+          <td style="width: 250px">{{datos["solution"]}}</td>
           <td>{{datos["culpable"]}}</td>
 
           {% if datos["usuario_nombre_insert"] == None %}
