@@ -220,6 +220,8 @@ def consultar():
         dictData["id"] = datas[11]
         newList.append(dictData)
 
+        print('aaaaaaaaaa',dictData["usuario_nombre_update"])
+
     newDict= dict(session)
     if newDict["perfil_nombre"]:
 

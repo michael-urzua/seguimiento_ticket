@@ -561,8 +561,17 @@
           <td><span style="text-overflow: clip;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
           <td>{{datos["solution"]}}</td>
           <td>{{datos["culpable"]}}</td>
+          {% if datos["usuario_nombre_insert"] == None %}
+          <td>Sin Regtistro</td>
+          {%else%}
           <td>{{datos["usuario_nombre_insert"]}}</td>
+          {%endif%}
+
+          {% if datos["usuario_nombre_update"] == None %}
+          <td>Sin Regtistro</td>
+          {%else%}
           <td>{{datos["usuario_nombre_update"]}}</td>
+          {%endif%}
 
         </tr>
       </tbody>
@@ -721,8 +730,17 @@
                     <td>{{datos["generateProblem"]}}</td>
                     <td>{{datos["solution"]}}</td>
                     <td>{{datos["culpable"]}}</td>
+                    {% if datos["usuario_nombre_insert"] == None %}
+                    <td>Sin Regtistro</td>
+                    {%else%}
                     <td>{{datos["usuario_nombre_insert"]}}</td>
+                    {%endif%}
+
+                    {% if datos["usuario_nombre_update"] == None %}
+                    <td>Sin Regtistro</td>
+                    {%else%}
                     <td>{{datos["usuario_nombre_update"]}}</td>
+                    {%endif%}
                   </tr>
                 </tbody>
                 {% endfor %}

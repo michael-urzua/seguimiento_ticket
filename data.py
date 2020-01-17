@@ -17,7 +17,7 @@ class consulta_inicial:
             cursor.execute("""SELECT
                                    estado,fecha_inicio_evento,fecha_solucion,inframonitor,fecha_aviso_clientes,
                                    coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),
-                                   usuario_nombre_insert,usuario_nombre_update,id
+                                   usuario_nombre_insert,coalesce(usuario_nombre_update,''),id
                                 FROM
                                    sisreg.registro_sisticket
                                where
@@ -169,7 +169,7 @@ class consulta_host:
                                     	UNION
 
                                     	(SELECT monitor_id AS id, CONCAT( monitor_id ,' - ', hostname) AS nombre, 'Z' AS tipo
-                                    					FROM sisreg.db_monitor
+                                    					FROM public.monitor
                                     					WHERE hostname is not null)
                                     ) AS foo
                                     ORDER BY tipo, id;""")
