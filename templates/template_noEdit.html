@@ -181,7 +181,7 @@
           <td>{{datos.qcliente}}</td>
           <td><span style="text-overflow: ellipsis;" alt="{{datos["problem"]}}" title="{{datos["problem"]}}">{{datos["problem"] | truncate(50)}}</span></td>
           <td><span style="text-overflow: ellipsis;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
-          <td style="width: 250px">{{datos["solution"]}}</td>
+          <td style="width: 250px;text-align:justify">{{datos["solution"]}}</td>
           <td>{{datos["culpable"]}}</td>
 
           {% if datos["usuario_nombre_insert"] == None %}

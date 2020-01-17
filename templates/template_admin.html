@@ -367,7 +367,7 @@
               <p style="color:#f0f0f0;">Problema Generado</p>
             </b>
           </td>
-          <td scope="col" style="width: 250px">
+          <td scope="col" style="width: 250px;text-align:left">
             <b>
               <p style="color:#f0f0f0;">Solucion</p>
             </b>
@@ -557,9 +557,9 @@
           <td><span style="text-overflow: clip;" alt="{{datos["clients"]}}" title="{{datos["clients"]}}">{{datos["clients"] | truncate(50)}}</span></td>
           {%endif%}
           <td>{{datos.qcliente}}</td>
-          <td><span style="text-overflow: clip;" alt="{{datos["problem"]}}" title="{{datos["problem"]}}">{{datos["problem"] | truncate(50)}}</span></td>
-          <td><span style="text-overflow: clip;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
-          <td style="width: 250px">{{datos["solution"]}}</td>
+          <td><span style="text-overflow: clip;text-align:justify" alt="{{datos["problem"]}}" title="{{datos["problem"]}}">{{datos["problem"] | truncate(50)}}</span></td>
+          <td><span style="text-overflow: clip;text-align:justify" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
+          <td style="width: 250px;text-align:justify">{{datos["solution"]}}</td>
           <td>{{datos["culpable"]}}</td>
           {% if datos["usuario_nombre_insert"] == None %}
           <td>Sin Regtistro</td>
