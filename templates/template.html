@@ -331,6 +331,16 @@
           <th scope="col">
             <p style="color:#f0f0f0;">Culpable</p>
           </th>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Creado por</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Modificado por</p>
+            </b>
+          </td>
         </tr>
 
       </thead>
@@ -507,6 +517,8 @@
           <td><span style="text-overflow: ellipsis;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
           <td>{{datos["solution"]}}</td>
           <td>{{datos["culpable"]}}</td>
+          <td>{{datos["usuario_nombre_insert"]}}</td>
+          <td>{{datos["usuario_nombre_update"]}}</td>
 
         </tr>
       </tbody>

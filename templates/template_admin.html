@@ -377,6 +377,17 @@
               <p style="color:#f0f0f0;">Culpable</p>
             </b>
           </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Creado por</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Modificado por</p>
+            </b>
+          </td>
+
         </tr>
 
       </thead>
@@ -441,10 +452,6 @@
                             style="background-color: #fff5eb;">{{datos["monitor"]}}</textarea>
                         </div>
                       </div>
-
-
-
-
 
                       <div class="form-group row">
                         <label for="inputobjetivo3" class="col-sm-3 col-form-label">Clientes</label>
@@ -554,6 +561,8 @@
           <td><span style="text-overflow: clip;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
           <td>{{datos["solution"]}}</td>
           <td>{{datos["culpable"]}}</td>
+          <td>{{datos["usuario_nombre_insert"]}}</td>
+          <td>{{datos["usuario_nombre_update"]}}</td>
 
         </tr>
       </tbody>
@@ -676,6 +685,17 @@
                         <p style="color:#f0f0f0;">Culpable</p>
                       </b>
                     </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Creado por</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Modificado por</p>
+                      </b>
+                    </td>
+
                   </tr>
 
                 </thead>
@@ -701,6 +721,8 @@
                     <td>{{datos["generateProblem"]}}</td>
                     <td>{{datos["solution"]}}</td>
                     <td>{{datos["culpable"]}}</td>
+                    <td>{{datos["usuario_nombre_insert"]}}</td>
+                    <td>{{datos["usuario_nombre_update"]}}</td>
                   </tr>
                 </tbody>
                 {% endfor %}

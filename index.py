@@ -131,7 +131,9 @@ def inicio():
         dictData["generateProblem"] = datas[6]
         dictData["solution"] = datas[7]
         dictData["culpable"] = datas[8]
-        dictData["id"] = datas[9]
+        dictData["usuario_nombre_insert"] = datas[9]
+        dictData["usuario_nombre_update"] = datas[10]
+        dictData["id"] = datas[11]
         newList.append(dictData)
 
 
@@ -213,7 +215,9 @@ def consultar():
         dictData["generateProblem"] = datas[6]
         dictData["solution"] = datas[7]
         dictData["culpable"] = datas[8]
-        dictData["id"] = datas[9]
+        dictData["usuario_nombre_insert"] = datas[9]
+        dictData["usuario_nombre_update"] = datas[10]
+        dictData["id"] = datas[11]
         newList.append(dictData)
 
     newDict= dict(session)

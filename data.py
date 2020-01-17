@@ -16,7 +16,8 @@ class consulta_inicial:
             cursor = conexion.conect_post()
             cursor.execute("""SELECT
                                    estado,fecha_inicio_evento,fecha_solucion,inframonitor,fecha_aviso_clientes,
-                                   coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
+                                   coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),
+                                   usuario_nombre_insert,usuario_nombre_update,id
                                 FROM
                                    sisreg.registro_sisticket
                                where
@@ -80,7 +81,8 @@ class consulta_busqueda:
             cursor.execute("""SELECT
                                 	estado,fecha_inicio_evento,coalesce(CAST(fecha_solucion AS VARCHAR(25)),'SIN FECHA'),
                                     coalesce(CAST(fecha_aviso_clientes AS VARCHAR(25)),'SIN FECHA'),inframonitor,
-                                	coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),id
+                                	coalesce(problema,''), coalesce(problema_genera,''), coalesce(solucion,''), coalesce(culpable,''),
+                                    usuario_nombre_insert,usuario_nombre_update,id
                                  FROM
                                     sisreg.registro_sisticket
                                 where
@@ -108,9 +110,10 @@ class actualiza_registro:
             cursor = connection.cursor()
             cursor.execute(""" UPDATE sisreg.registro_sisticket
                                     SET usuario_nombre_update=%s,usuario_id_update =%s,fecha_solucion=%s,fecha_aviso_clientes=%s,problema=%s,
-                                    problema_genera=%s,solucion=%s,culpable=%s,estado=%s
+                                    problema_genera=%s,solucion=%s,culpable=%s,estado=%s,fecha_actualizacion = %s
                                     WHERE id = %s
-                                    """, (usuario, usuario_id, fecha_solucion, fecha_aviso_clientes, problema, problema_genera, solucion, culpable, estado, id))
+                                    """, (usuario, usuario_id, fecha_solucion, fecha_aviso_clientes, problema, problema_genera,
+                                          solucion, culpable, estado,fecha_actualizacion, id))
             connection.commit()
             flash("DATOS ACTUALIZADOS EXITOSAMENTE", "success")
 
