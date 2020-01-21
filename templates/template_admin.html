@@ -29,7 +29,9 @@
   {% block content %}
   <!-- .......-CABECERA-....... -->
   <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
-    <li class="ancho_barra"><a class="navbar-brand" href="{{url_for('inicio')}}"><i class="fas fa-home" style="font-size:30px;color:rgb(236, 101, 14)"></i> SEGUIMIENTO TICKET</a></li>
+    <li class="ancho_barra"><a class="navbar-brand" href="{{url_for('inicio')}}"><i class="fas fa-home"
+        style="font-size:30px;color:rgb(236, 101, 14)"></i> SEGUIMIENTO TICKET</a>
+      </li>
     <li class="ancho_barra"><a class="navbar-brand" href="{{url_for('mantenedor')}}">ADMIN. USUARIOS</a></li>
     <form action="/logout" method="POST">
       <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>

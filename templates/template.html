@@ -21,16 +21,40 @@
       color: #de1b1b;
     }
   </style>
-  {% include "librerias.html" %}
-  {% include "menu.html" %}
-
+  {% extends "librerias.html" %}
 </head>
 
 <body>
 
   {% block content %}
   <!-- .......-CABECERA-....... -->
+  <ul style="padding: 17px;filter:alpha(opacity=50); opacity:0.9;">
+    <li class="ancho_barra"><a class="navbar-brand" href="{{url_for('inicio')}}"><i class="fas fa-home"
+        style="font-size:30px;color:rgb(236, 101, 14)"></i> SEGUIMIENTO TICKET</a>
+      </li>
+    <form action="/logout" method="POST">
+      <button style="float:right" type="submit" class="btn btn-danger btn-lg">Salir</button>
+      <a style="float:right" class="navbar-brand">{{usuario}}</a>
+      <i class="far fa-user-circle" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+      <a style="float:right" class="navbar-brand">{{compania}}</a>
+      <i class="fas fa-university" style="font-size:30px;float:right;padding: 5px;color:rgb(236, 101, 14)"></i>
+    </form><br>
+  </ul>
 
+  <!-- .......-CABECERA-....... -->
+
+  {% with messages = get_flashed_messages(with_categories=true) %}a
+  {% if messages %}
+  {% for category, message in messages %}
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    <span>{{ message }}</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
 
 
 
@@ -280,9 +304,6 @@
 
   <!-- FIN INSERTAR REGISTROS  -->
 
-
-
-
   <div class="jumbotron jumbotron-fluid" style="padding-top: 14px ;padding-bottom: 5px; padding: 5px;">
     <div class="form-group pull-right" style="width:15%">
       <input type="text" class="search form-control" placeholder="Buscar">
@@ -290,47 +311,69 @@
     <span class="counter pull-right"></span>
     <br>
 
-    <!-- <button id="exportButton" data-toggle="tooltip" title="Exportar Excel" class="btn btn-lg clearfix" style="background-color:rgb(23, 113, 11);color:#f0f0f0;float:right"> -->
-    <!-- <span class="fas fa-file-excel" ></span> </button> -->
-    <table id="example" class="table table-hover table-bordered results" style="width:100%; text-align: center;">
+    <table id="tabla_principal" class="table table-hover table-bordered results" style="width:100%; text-align: center;">
       <thead style="background-color:rgb(236, 101, 14)">
         <tr>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Acción</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Estado</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Fecha Inicio Evento</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Fecha Solución</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Fecha Aviso Clientes</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Monitor Hostname</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Clientes Afectado</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">N° Clientes Afectado</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Problema</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Problema Generado</p>
-          </th>
-          <th scope="col" style="width: 250px">
-            <p style="color:#f0f0f0;">Solución</p>
-          </th>
-          <th scope="col">
-            <p style="color:#f0f0f0;">Culpable</p>
-          </th>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;size:14px">Acción</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Estado</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Fecha Inicio Evento</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Fecha Solucion</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Fecha Aviso Clientes</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Monitor Hostname</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Clientes Afectado</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">N° Clientes Afectado</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Problema</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Problema Generado</p>
+            </b>
+          </td>
+          <td scope="col" style="width: 250px;text-align:left">
+            <b>
+              <p style="color:#f0f0f0;">Solucion</p>
+            </b>
+          </td>
+          <td scope="col">
+            <b>
+              <p style="color:#f0f0f0;">Culpable</p>
+            </b>
+          </td>
           <td scope="col">
             <b>
               <p style="color:#f0f0f0;">Creado por</p>
@@ -341,11 +384,13 @@
               <p style="color:#f0f0f0;">Modificado por</p>
             </b>
           </td>
+
         </tr>
 
       </thead>
       {% for datos in data%}
       <tbody>
+
         <tr style="width:100%">
           <td>
             <a href="/actualizar/{{datos["id"]}}" class="btn btn-warning" data-toggle="modal" data-target="#myModal2{{datos["id"]}}">
@@ -404,10 +449,6 @@
                             style="background-color: #fff5eb;">{{datos["monitor"]}}</textarea>
                         </div>
                       </div>
-
-
-
-
 
                       <div class="form-group row">
                         <label for="inputobjetivo3" class="col-sm-3 col-form-label">Clientes</label>
@@ -495,10 +536,10 @@
               </div>
             </div>
             <!-- ENDModal -->
+          </td>
 
 
-
-            {% if datos["status"] == True %}
+          {% if datos["status"] == True %}
           <th><span class="far fa-check-circle text-success fa-2x"></span></th>
           {%else%}
           <th><span class="far fa-times-circle  text-danger fa-2x"></span></th>
@@ -510,14 +551,13 @@
           {% if datos["clients"] == '' %}
           <td>SIN CLIENTES</td>
           {%else%}
-          <td><span style="text-overflow: ellipsis;" alt="{{datos["clients"]}}" title="{{datos["clients"]}}">{{datos["clients"] | truncate(50)}}</span></td>
+          <td><span style="text-overflow: clip;" alt="{{datos["clients"]}}" title="{{datos["clients"]}}">{{datos["clients"] | truncate(50)}}</span></td>
           {%endif%}
           <td>{{datos.qcliente}}</td>
-          <td><span style="text-overflow: ellipsis;" alt="{{datos["problem"]}}" title="{{datos["problem"]}}">{{datos["problem"] | truncate(50)}}</span></td>
-          <td><span style="text-overflow: ellipsis;" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
+          <td><span style="text-overflow: clip;text-align:justify" alt="{{datos["problem"]}}" title="{{datos["problem"]}}">{{datos["problem"] | truncate(50)}}</span></td>
+          <td><span style="text-overflow: clip;text-align:justify" alt="{{datos["generateProblem"]}}" title="{{datos["generateProblem"]}}">{{datos["generateProblem"] | truncate(50)}}</span></td>
           <td style="width: 250px;text-align:justify">{{datos["solution"]}}</td>
           <td>{{datos["culpable"]}}</td>
-
           {% if datos["usuario_nombre_insert"] == None %}
           <td>Sin Regtistro</td>
           {%else%}
@@ -536,7 +576,7 @@
       {% endfor %}
       <script type="text/javascript">
         $(document).ready(function() {
-          $('#example').DataTable({
+          $('#tabla_principal').DataTable({
             "scrollY": 500,
             "scrollX": true,
             "paging": false,
@@ -582,7 +622,173 @@
           });
         });
       </script>
+
     </table>
+
+
+    <!-- The Modal -->
+    <div class="modal fade" id="myModalTabla">
+      <div class="modal-dialog modal-lg" style="max-width: 1000px;">
+        <div class="modal-content">
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="table-responsive" style="overflow:scroll;height:500px;">
+              <table class="table table-bordered" id="tabla">
+                <thead style="background-color:rgb(236, 101, 14)">
+                  <tr>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Estado</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Fecha Inicio Evento</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Fecha Solución</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Fecha Aviso Clientes</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Monitor Hostname</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Clientes Afectado</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">N° Clientes Afectado</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Problema</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Problema Generado</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Solución</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Culpable</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Creado por</p>
+                      </b>
+                    </td>
+                    <td scope="col">
+                      <b>
+                        <p style="color:#f0f0f0;">Modificado por</p>
+                      </b>
+                    </td>
+
+                  </tr>
+
+                </thead>
+                {% for datos in data%}
+                <tbody>
+                  <tr style="width:100%">
+                    {% if datos["status"] == True %}
+                    <th>Habilitado</th>
+                    {%else%}
+                    <th>Deshabilitado</th>
+                    {%endif%}
+                    <td>{{datos["beginDate"]}}</td>
+                    <td>{{datos["solutionDate"]}}</td>
+                    <td>{{datos["fechAvisoCli"]}}</td>
+                    <td>{{datos["monitor"]}}</td>
+                    {% if datos["clients"] == '' %}
+                    <td>SIN CLIENTES</td>
+                    {%else%}
+                    <td>{{datos["clients"]}}</td>
+                    {%endif%}
+                    <td>{{datos.qcliente}}</td>
+                    <td>{{datos["problem"]}}</td>
+                    <td>{{datos["generateProblem"]}}</td>
+                    <td>{{datos["solution"]}}</td>
+                    <td>{{datos["culpable"]}}</td>
+                    {% if datos["usuario_nombre_insert"] == None %}
+                    <td>Sin Regtistro</td>
+                    {%else%}
+                    <td>{{datos["usuario_nombre_insert"]}}</td>
+                    {%endif%}
+
+                    {% if datos["usuario_nombre_update"] == None %}
+                    <td>Sin Regtistro</td>
+                    {%else%}
+                    <td>{{datos["usuario_nombre_update"]}}</td>
+                    {%endif%}
+                  </tr>
+                </tbody>
+                {% endfor %}
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script type="text/javascript">
+        function ExportToExcel(tabla) {
+          var clone = tabla.clone();
+          var trs = clone.find('tr');
+          $.each(trs, function(i, tr) {
+            $(tr).find('td:eq(0)').remove();
+          });
+          var htmlExport = clone.prop('outerHTML');
+          var ua = window.navigator.userAgent;
+          var msie = ua.indexOf("MSIE ");
+
+          if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            jQuery('body').append("<iframe id=\"iframeExport\" style=\"display:none\"></iframe>");
+            iframeExport.document.open("txt/html", "replace");
+            iframeExport.document.write(htmlExport);
+            iframeExport.document.close();
+            iframeExport.focus();
+            sa = iframeExport.document.execCommand("SaveAs", true, "List.xls");
+          } else {
+            var link = document.createElement('a');
+
+            document.body.appendChild(link); // Firefox requires the link to be in the body
+            link.download = "List.xls";
+            link.href = 'data:application/vnd.ms-excel,' + escape(htmlExport);
+            link.click();
+            document.body.removeChild(link);
+          }
+        }
+      </script>
+      <script type="text/javascript">
+        $(function() {
+          $('#myModalTabla').on('show.bs.modal', function() {
+            var myModal = $(this);
+            clearTimeout(myModalTabla.data('hideInterval'));
+            myModalTabla.data('hideInterval', setTimeout(function() {
+              myModalTabla.modal('hide');
+            }, 1000));
+          });
+        });
+      </script>
+    </div>
+
+
 
   </div>
 
